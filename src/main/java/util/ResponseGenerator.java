@@ -1,6 +1,4 @@
-package webserver;
-
-import util.HttpStatusCode;
+package util;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package webserver.service;
 
-import webserver.RequestParser;
+import util.RequestParser;
 
 import java.io.IOException;
 

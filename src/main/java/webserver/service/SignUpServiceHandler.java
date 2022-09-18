@@ -3,7 +3,7 @@ package webserver.service;
 import exception.UserNotValidException;
 import model.User;
 import model.UserValidator;
-import webserver.RequestParser;
+import util.RequestParser;
 import webserver.repository.UserRepository;
 
 public class SignUpServiceHandler implements ServiceHandler {

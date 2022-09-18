@@ -1,4 +1,4 @@
-package webserver;
+package util;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import com.google.common.base.Charsets;
