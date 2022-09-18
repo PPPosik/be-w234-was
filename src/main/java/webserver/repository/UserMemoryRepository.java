@@ -25,7 +25,7 @@ public class UserMemoryRepository implements UserRepository {
 
     @Override
     public Optional<User> findByUserId(String id) {
-        // TODO
+        // TODO 기능 구현
         return Optional.empty();
     }
 
@@ -36,13 +36,13 @@ public class UserMemoryRepository implements UserRepository {
 
     @Override
     public Optional<User> update(User user) {
-        // TODO
+        // TODO 기능 구현
         return Optional.empty();
     }
 
     @Override
     public boolean delete(User user) {
-        // TODO
+        // TODO 기능 구현
         return false;
     }
 
