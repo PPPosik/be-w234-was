@@ -1,4 +1,4 @@
-package webserver.service;
+package webserver.servicehandler;
 
 import webserver.repository.UserMemoryRepository;
 import webserver.repository.UserRepository;

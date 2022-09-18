@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import util.Request;
 import util.RequestParser;
 import util.Response;
+import util.ResponseSender;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -34,20 +35,13 @@ public class RequestHandler implements Runnable {
     public void run() {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
 
-        try (OutputStream out = connection.getOutputStream()) {
+        try (DataOutputStream out = new DataOutputStream(connection.getOutputStream())) {
             this.request = requestParser.parse();
-            this.response = new Response(new DataOutputStream(out));
-            byte[] body = generateBody().getBytes();
-            String accept = request.getHeaders().get("accept");
+            this.response = generateResponse();
 
             printRequest();
 
-            response
-                    .setHttpStatusCode(200)
-                    .setHeader("Content-Length", String.valueOf(body.length))
-                    .setHeader("Content-Type", accept.split(",")[0] + ";charset=utf-8")
-                    .setBody(body)
-                    .send();
+            ResponseSender.send(out, response);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
@@ -65,7 +59,7 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private String generateBody() {
+    private Response generateResponse() {
         return servlet.service(request);
     }
 }

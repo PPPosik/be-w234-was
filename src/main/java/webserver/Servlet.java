@@ -1,14 +1,20 @@
 package webserver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import util.Request;
-import webserver.service.ServiceHandlerMapper;
+import util.Response;
+import webserver.servicehandler.ServiceHandlerMapper;
 
 public class Servlet {
-    public String service(Request request) {
+    private static final Logger logger = LoggerFactory.getLogger(Servlet.class);
+
+    public Response service(Request request) {
         try {
             return ServiceHandlerMapper.getHandler(request.getPath()).handle(request);
         } catch (Exception e) {
-            return e.getMessage();
+            logger.error(e.getMessage());
+            return new Response().setHttpStatusCode(500).setBody(e.getMessage());
         }
     }
 }
