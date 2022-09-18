@@ -5,35 +5,35 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ResponseGenerator {
+public class Response {
     private final DataOutputStream out;
+    private final Map<String, String> headers;
 
     private HttpStatusCode httpStatusCode;
-    private Map<String, String> headers;
     private byte[] body;
 
-    public ResponseGenerator(DataOutputStream out) {
+    public Response(DataOutputStream out) {
         this.out = out;
         this.httpStatusCode = HttpStatusCode.OK;
         this.headers = new HashMap<>();
     }
 
-    public ResponseGenerator setHttpStatusCode(int code) {
+    public Response setHttpStatusCode(int code) {
         this.httpStatusCode = HttpStatusCode.getByValue(code);
         return this;
     }
 
-    public ResponseGenerator setHeader(String name, String value) {
+    public Response setHeader(String name, String value) {
         this.headers.put(name, value);
         return this;
     }
 
-    public ResponseGenerator setBody(String body) {
+    public Response setBody(String body) {
         this.body = body.getBytes();
         return this;
     }
 
-    public ResponseGenerator setBody(byte[] body) {
+    public Response setBody(byte[] body) {
         this.body = body;
         return this;
     }

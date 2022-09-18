@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.Request;
 import util.RequestParser;
-import util.ResponseGenerator;
+import util.Response;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -18,7 +18,7 @@ public class RequestHandler implements Runnable {
     private Servlet servlet;
     private RequestParser requestParser;
     private Request request;
-    private ResponseGenerator response;
+    private Response response;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -36,7 +36,7 @@ public class RequestHandler implements Runnable {
 
         try (OutputStream out = connection.getOutputStream()) {
             this.request = requestParser.parse();
-            this.response = new ResponseGenerator(new DataOutputStream(out));
+            this.response = new Response(new DataOutputStream(out));
             byte[] body = generateBody().getBytes();
             String accept = request.getHeaders().get("accept");
 
