@@ -5,6 +5,7 @@ import model.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UserMemoryRepository implements UserRepository {
@@ -12,18 +13,19 @@ public class UserMemoryRepository implements UserRepository {
     private static int sequence = 0;
 
     @Override
-    public User save(User user) {
+    public Optional<User> save(User user) {
         if (users.containsValue(user)) {
-            return null;
+            return Optional.empty();
         }
 
         users.put(sequence++, user);
-        return user;
+        return Optional.of(user);
     }
 
     @Override
-    public User findByUserId(String id) {
-        return null;
+    public Optional<User> findByUserId(String id) {
+        // TODO
+        return Optional.empty();
     }
 
     @Override
@@ -38,12 +40,14 @@ public class UserMemoryRepository implements UserRepository {
     }
 
     @Override
-    public User update(User user) {
-        return null;
+    public Optional<User> update(User user) {
+        // TODO
+        return Optional.empty();
     }
 
     @Override
     public boolean delete(User user) {
+        // TODO
         return false;
     }
 
