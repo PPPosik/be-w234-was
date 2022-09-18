@@ -27,7 +27,7 @@ public class UserValidator {
     public static boolean isValidUser(User user) {
         return isValidUserId(user.getUserId()) &&
                 isValidPassword(user.getPassword()) &&
-                isValidName(user.getPassword()) &&
+                isValidName(user.getName()) &&
                 isValidEmail(user.getEmail());
     }
 
