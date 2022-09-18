@@ -15,7 +15,7 @@ public class SignUpServiceHandler implements ServiceHandler {
     public String handle(RequestParser requestParser) {
         User user = new User(requestParser.params.get("userId"), requestParser.params.get("password"), requestParser.params.get("name"), requestParser.params.get("email"));
 
-        if (userRepository.save(user) != null) {
+        if (userRepository.save(user).isPresent()) {
             return user + " 유저 정보 저장에 성공했습니다.";
         } else {
             return user + " 유저 정보 저장에 실패했습니다.";

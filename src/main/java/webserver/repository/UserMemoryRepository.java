@@ -1,5 +1,6 @@
 package webserver.repository;
 
+import exception.UserSaveException;
 import model.User;
 
 import java.util.ArrayList;
@@ -9,13 +10,13 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UserMemoryRepository implements UserRepository {
-    private static Map<Integer, User> users = new ConcurrentHashMap<>();
+    private static final Map<Integer, User> users = new ConcurrentHashMap<>();
     private static int sequence = 0;
 
     @Override
     public Optional<User> save(User user) {
         if (users.containsValue(user)) {
-            return Optional.empty();
+            throw new UserSaveException(user + " 정보가 이미 존재합니다.");
         }
 
         users.put(sequence++, user);
