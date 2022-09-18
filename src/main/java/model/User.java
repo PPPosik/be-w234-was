@@ -35,11 +35,6 @@ public class User {
     }
 
     @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
     public boolean equals(Object obj) {
         if (obj instanceof User) {
             return this.userId.equals(((User) obj).userId);
