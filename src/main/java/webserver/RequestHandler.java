@@ -32,9 +32,14 @@ public class RequestHandler implements Runnable {
 
         try (OutputStream out = connection.getOutputStream()) {
             ResponseGenerator response = new ResponseGenerator(new DataOutputStream(out));
-            byte[] body = generateBody();
+            byte[] body = generateBody().getBytes();
             String accept = requestParser.headers.get("accept");
-            response.set200Header(body.length).setContentType(accept).setBody(body);
+            response
+                    .setHttpStatusCode(200)
+                    .setHeader("Content-Length", String.valueOf(body.length))
+                    .setHeader("Content-Type", accept.split(",")[0] + ";charset=utf-8")
+                    .setBody(body)
+                    .send();
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
@@ -52,7 +57,7 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private byte[] generateBody() {
-        return servlet.service(requestParser).getBytes();
+    private String generateBody() {
+        return servlet.service(requestParser);
     }
 }
