@@ -2,6 +2,7 @@ package webserver;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import com.google.common.base.Charsets;
+import exception.RequestParsingException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,6 +34,10 @@ public class RequestParser {
     private void parseRequestLine(String str) {
         String[] splits = str.split(" ");
 
+        if (splits.length != 3) {
+            throw new RequestParsingException("잘못된 요청입니다.");
+        }
+
         this.method = splits[0];
         parseParams(splits[1]);
         this.version = splits[2];
@@ -45,7 +50,9 @@ public class RequestParser {
         if (splits.length > 1) {
             for (String q : splits[1].split("&")) {
                 String[] p = q.split("=");
-                params.put(URLDecoder.decode(p[0], Charsets.UTF_8), URLDecoder.decode(p[1], Charsets.UTF_8));
+                if (p.length == 2) {
+                    params.put(URLDecoder.decode(p[0], Charsets.UTF_8), URLDecoder.decode(p[1], Charsets.UTF_8));
+                }
             }
         }
     }
@@ -55,7 +62,9 @@ public class RequestParser {
 
         while (StringUtils.isNotBlank(line = br.readLine())) {
             String[] splits = line.split(":", 2);
-            this.headers.put(splits[0].trim().toLowerCase(), splits[1].trim().toLowerCase());
+            if (splits.length == 2) {
+                this.headers.put(splits[0].trim().toLowerCase(), splits[1].trim().toLowerCase());
+            }
         }
     }
 }
