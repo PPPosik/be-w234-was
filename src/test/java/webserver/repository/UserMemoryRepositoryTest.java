@@ -1,5 +1,6 @@
 package webserver.repository;
 
+import exception.UserSaveException;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserMemoryRepositoryTest {
     UserRepository userRepository = new UserMemoryRepository();
@@ -28,8 +30,8 @@ class UserMemoryRepositoryTest {
 
     @Test
     void saveDuplicateTest() {
-        assertThat(userRepository.save(user1)).isNotNull();
-        assertThat(userRepository.save(user1)).isNull();
+        assertThat(userRepository.save(user1).isPresent()).isTrue();
+        assertThrows(UserSaveException.class, () -> userRepository.save(user1));
         assertThat(userRepository.findAll().size()).isEqualTo(1);
     }
 
