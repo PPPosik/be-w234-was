@@ -14,18 +14,18 @@ public class ServiceHandlerMapper {
         handlers = new HashMap<>();
         userRepository = new UserMemoryRepository();
 
-        handlers.put("static file", new StaticFileServiceHandler());
+        handlers.put("/static", new StaticFileServiceHandler());
         handlers.put("/user/create", new SignUpServiceHandler(userRepository));
     }
 
     private ServiceHandlerMapper() {
     }
 
-    public static ServiceHandler getHandler(String url) {
-        if (handlers.containsKey(url)) {
-            return handlers.get(url);
+    public static ServiceHandler getHandler(String path) {
+        if (handlers.containsKey(path)) {
+            return handlers.get(path);
         } else {
-            return handlers.get("static file");
+            return handlers.get("/static");
         }
     }
 }
