@@ -35,12 +35,14 @@ public class RequestHandler implements Runnable {
     }
 
     private void printRequest() {
-        logger.debug("method : " + requestParser.method);
-        logger.debug("path : " + requestParser.path);
-        logger.debug("version : " + requestParser.version);
+        if (logger.isDebugEnabled()) {
+            logger.debug("method : " + requestParser.method);
+            logger.debug("path : " + requestParser.path);
+            logger.debug("version : " + requestParser.version);
 
-        for (Map.Entry<String, String> entry : requestParser.headers.entrySet()) {
-            logger.debug(entry.getKey() + " : " + entry.getValue());
+            for (Map.Entry<String, String> entry : requestParser.headers.entrySet()) {
+                logger.debug(entry.getKey() + " : " + entry.getValue());
+            }
         }
     }
 
