@@ -43,8 +43,7 @@ public class User {
     public boolean equals(Object obj) {
         if (obj instanceof User) {
             return this.userId.equals(((User) obj).userId);
-        }
-        else {
+        } else {
             return false;
         }
     }
