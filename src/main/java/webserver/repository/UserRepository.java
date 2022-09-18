@@ -10,7 +10,7 @@ public interface UserRepository {
 
     Optional<User> findByUserId(String id);
 
-    List<User> findAll();
+    Optional<List<User>> findAll();
 
     Optional<User> update(User user);
 

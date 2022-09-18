@@ -25,14 +25,14 @@ class UserMemoryRepositoryTest {
     void saveTest() {
         assertThat(userRepository.save(user1)).isNotNull();
         assertThat(userRepository.save(user2)).isNotNull();
-        assertThat(userRepository.findAll().size()).isEqualTo(2);
+        assertThat(userRepository.findAll().get().size()).isEqualTo(2);
     }
 
     @Test
     void saveDuplicateTest() {
         assertThat(userRepository.save(user1).isPresent()).isTrue();
         assertThrows(UserSaveException.class, () -> userRepository.save(user1));
-        assertThat(userRepository.findAll().size()).isEqualTo(1);
+        assertThat(userRepository.findAll().get().size()).isEqualTo(1);
     }
 
     @Test
@@ -40,9 +40,9 @@ class UserMemoryRepositoryTest {
         userRepository.save(user1);
         userRepository.save(user2);
 
-        assertThat(userRepository.findAll().size()).isEqualTo(2);
+        assertThat(userRepository.findAll().get().size()).isEqualTo(2);
         userRepository.clear();
-        assertThat(userRepository.findAll().size()).isEqualTo(0);
+        assertThat(userRepository.findAll().get().size()).isEqualTo(0);
     }
 
     @Test
@@ -50,9 +50,15 @@ class UserMemoryRepositoryTest {
         userRepository.save(user1);
         userRepository.save(user2);
 
-        List<User> users = userRepository.findAll();
+        List<User> users = userRepository.findAll().get();
 
         assertThat(users.size()).isEqualTo(2);
         assertThat(users).contains(user1, user2);
+    }
+
+    @Test
+    void findAllNoneTest() {
+        List<User> users = userRepository.findAll().get();
+        assertThat(users.size()).isEqualTo(0);
     }
 }

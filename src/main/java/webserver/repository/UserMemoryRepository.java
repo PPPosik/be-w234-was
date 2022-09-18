@@ -30,14 +30,8 @@ public class UserMemoryRepository implements UserRepository {
     }
 
     @Override
-    public List<User> findAll() {
-        List<User> list = new ArrayList<>();
-
-        for (User user : users.values()) {
-            list.add(user);
-        }
-
-        return list;
+    public Optional<List<User>> findAll() {
+        return Optional.of(new ArrayList<>(users.values()));
     }
 
     @Override
