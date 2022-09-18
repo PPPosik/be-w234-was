@@ -1,9 +1,9 @@
 package webserver.service;
 
-import util.RequestParser;
+import util.Request;
 
 import java.io.IOException;
 
 public interface ServiceHandler {
-    String handle(RequestParser requestParser) throws IOException;
+    String handle(Request request) throws IOException;
 }

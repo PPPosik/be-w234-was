@@ -7,6 +7,7 @@ import java.util.Map;
 import exception.RequestParsingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.Request;
 import util.RequestParser;
 import util.ResponseGenerator;
 
@@ -14,8 +15,10 @@ public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
-    private RequestParser requestParser;
     private Servlet servlet;
+    private RequestParser requestParser;
+    private Request request;
+    private ResponseGenerator response;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -30,36 +33,39 @@ public class RequestHandler implements Runnable {
 
     public void run() {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
-        printRequest();
 
         try (OutputStream out = connection.getOutputStream()) {
-            ResponseGenerator response = new ResponseGenerator(new DataOutputStream(out));
+            this.request = requestParser.parse();
+            this.response = new ResponseGenerator(new DataOutputStream(out));
             byte[] body = generateBody().getBytes();
-            String accept = requestParser.headers.get("accept");
+            String accept = request.getHeaders().get("accept");
+
+            printRequest();
+
             response
                     .setHttpStatusCode(200)
                     .setHeader("Content-Length", String.valueOf(body.length))
                     .setHeader("Content-Type", accept.split(",")[0] + ";charset=utf-8")
                     .setBody(body)
                     .send();
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }
 
     private void printRequest() {
         if (logger.isDebugEnabled()) {
-            logger.debug("method : " + requestParser.method);
-            logger.debug("path : " + requestParser.path);
-            logger.debug("version : " + requestParser.version);
+            logger.debug("method : " + request.getMethod());
+            logger.debug("path : " + request.getPath());
+            logger.debug("version : " + request.getVersion());
 
-            for (Map.Entry<String, String> entry : requestParser.headers.entrySet()) {
+            for (Map.Entry<String, String> entry : request.getHeaders().entrySet()) {
                 logger.debug(entry.getKey() + " : " + entry.getValue());
             }
         }
     }
 
     private String generateBody() {
-        return servlet.service(requestParser);
+        return servlet.service(request);
     }
 }

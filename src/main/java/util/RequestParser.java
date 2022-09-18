@@ -13,22 +13,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RequestParser {
-    public String method;
-    public String path;
-    public String version;
-    public Map<String, String> headers = new HashMap<>();
-    public Map<String, String> params = new HashMap<>();
+    private final InputStream in;
+    private Request request;
 
-    public RequestParser(InputStream in) throws Exception {
-        init(in);
+    public RequestParser(InputStream inputStream) {
+        this.in = inputStream;
     }
 
-    private void init(InputStream in) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(in, Charsets.UTF_8));
+    public Request parse() throws Exception {
+        if (request == null) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(in, Charsets.UTF_8));
 
-        String requestLine = br.readLine();
-        parseRequestLine(requestLine);
-        parseHeaders(br);
+            String requestLine = br.readLine();
+            parseRequestLine(requestLine);
+            parseHeaders(br);
+        }
+
+        return request;
     }
 
     private void parseRequestLine(String str) {
@@ -38,21 +39,19 @@ public class RequestParser {
             throw new RequestParsingException("잘못된 요청입니다.");
         }
 
-        this.method = splits[0];
-        parseParams(splits[1]);
-        this.version = splits[2];
+        String[] pathWithParam = splits[1].split("\\?", 2);
+        this.request = new Request(splits[0], pathWithParam[0], splits[2]);
+
+        if (pathWithParam.length > 1) {
+            parseParams(pathWithParam[1]);
+        }
     }
 
-    private void parseParams(String str) {
-        String[] splits = str.split("\\?", 2);
-
-        this.path = splits[0];
-        if (splits.length > 1) {
-            for (String q : splits[1].split("&")) {
-                String[] p = q.split("=");
-                if (p.length == 2) {
-                    params.put(URLDecoder.decode(p[0], Charsets.UTF_8), URLDecoder.decode(p[1], Charsets.UTF_8));
-                }
+    private void parseParams(String params) {
+        for (String q : params.split("&")) {
+            String[] p = q.split("=");
+            if (p.length == 2) {
+                request.addParam(URLDecoder.decode(p[0], Charsets.UTF_8), URLDecoder.decode(p[1], Charsets.UTF_8));
             }
         }
     }
@@ -63,7 +62,7 @@ public class RequestParser {
         while (StringUtils.isNotBlank(line = br.readLine())) {
             String[] splits = line.split(":", 2);
             if (splits.length == 2) {
-                this.headers.put(splits[0].trim().toLowerCase(), splits[1].trim().toLowerCase());
+                request.addHeader(splits[0].trim().toLowerCase(), splits[1].trim().toLowerCase());
             }
         }
     }

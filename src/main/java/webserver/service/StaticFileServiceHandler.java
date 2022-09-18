@@ -1,6 +1,6 @@
 package webserver.service;
 
-import util.RequestParser;
+import util.Request;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,8 +10,8 @@ public class StaticFileServiceHandler implements ServiceHandler {
     private final String RESOURCE_DIR = "webapp";
 
     @Override
-    public String handle(RequestParser requestParser) throws IOException {
-        File file = new File(getResourcePath(requestParser.path));
+    public String handle(Request request) throws IOException {
+        File file = new File(getResourcePath(request.getPath()));
 
         if (file.exists()) {
             return Files.readString(file.toPath());

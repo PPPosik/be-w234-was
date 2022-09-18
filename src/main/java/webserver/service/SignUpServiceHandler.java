@@ -3,7 +3,7 @@ package webserver.service;
 import exception.UserNotValidException;
 import model.User;
 import model.UserValidator;
-import util.RequestParser;
+import util.Request;
 import webserver.repository.UserRepository;
 
 public class SignUpServiceHandler implements ServiceHandler {
@@ -14,11 +14,11 @@ public class SignUpServiceHandler implements ServiceHandler {
     }
 
     @Override
-    public String handle(RequestParser requestParser) {
-        final String userId = requestParser.params.get("userId");
-        final String password = requestParser.params.get("password");
-        final String name = requestParser.params.get("name");
-        final String email = requestParser.params.get("email");
+    public String handle(Request request) {
+        final String userId = request.getParams().get("userId");
+        final String password = request.getParams().get("password");
+        final String name = request.getParams().get("name");
+        final String email = request.getParams().get("email");
 
         User user = new User(userId, password, name, email);
         if (UserValidator.isNotValidUser(user)) {
