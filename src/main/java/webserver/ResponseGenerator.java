@@ -16,16 +16,6 @@ public class ResponseGenerator {
         return this;
     }
 
-    public ResponseGenerator setContentTypeHtml() throws IOException {
-        out.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-        return this;
-    }
-
-    public ResponseGenerator setContentTypeCss() throws IOException {
-        out.writeBytes("Content-Type: text/css;charset=utf-8\r\n");
-        return this;
-    }
-
     public ResponseGenerator setContentType(String accept) throws IOException {
         out.writeBytes("Content-Type: " + accept.split(",")[0] + ";charset=utf-8\r\n");
         return this;
