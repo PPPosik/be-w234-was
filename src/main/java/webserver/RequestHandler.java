@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Map;
 
+import exception.RequestParsingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,10 +15,15 @@ public class RequestHandler implements Runnable {
     private RequestParser requestParser;
     private Servlet servlet;
 
-    public RequestHandler(Socket connectionSocket) throws Exception {
+    public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
-        this.requestParser = new RequestParser(connection.getInputStream());
         this.servlet = new Servlet();
+
+        try {
+            this.requestParser = new RequestParser(connection.getInputStream());
+        } catch (Exception e) {
+            throw new RequestParsingException("잘못된 요청이 발생했습니다.");
+        }
     }
 
     public void run() {
