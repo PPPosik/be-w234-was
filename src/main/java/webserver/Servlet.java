@@ -1,7 +1,11 @@
 package webserver;
 
+import exception.UserNotValidException;
+import exception.UserSaveException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.HttpStatusCode;
+import util.Mime;
 import util.Request;
 import util.Response;
 import webserver.servicehandler.ServiceHandlerMapper;
@@ -12,9 +16,18 @@ public class Servlet {
     public Response service(Request request) {
         try {
             return ServiceHandlerMapper.getHandler(request.getPath()).handle(request);
+        } catch (UserSaveException | UserNotValidException e) {
+            logger.error(e.toString());
+            return new Response()
+                    .setHttpStatusCode(HttpStatusCode.BAD_REQUEST)
+                    .setHeader("Content-Type", Mime.NONE.getMime() +";charset=utf-8")
+                    .setBody(e.getMessage());
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            return new Response().setHttpStatusCode(500).setBody(e.getMessage());
+            logger.error(e.toString());
+            return new Response()
+                    .setHttpStatusCode(HttpStatusCode.INTERNAL_SERVER_ERROR)
+                    .setHeader("Content-Type", Mime.NONE.getMime()+";charset=utf-8")
+                    .setBody(e.getMessage());
         }
     }
 }

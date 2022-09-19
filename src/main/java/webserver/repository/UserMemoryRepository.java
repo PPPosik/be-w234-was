@@ -16,7 +16,7 @@ public class UserMemoryRepository implements UserRepository {
     @Override
     public Optional<User> save(User user) {
         if (users.containsValue(user)) {
-            throw new UserSaveException(user + " 정보가 이미 존재합니다.");
+            throw new UserSaveException(user + " 유저의 정보가 이미 존재합니다.");
         }
 
         users.put(sequence++, user);
