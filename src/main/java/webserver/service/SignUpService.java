@@ -23,7 +23,7 @@ public class SignUpService {
 
         if (userRepository.save(user).isPresent()) {
             response.setBody(user + " 유저 정보 저장에 성공했습니다.");
-            response.setHttpStatusCode(HttpStatusCode.OK);
+            response.setHttpStatusCode(HttpStatusCode.FOUND);
         } else {
             response.setBody(user + " 유저 정보 저장에 실패했습니다.");
             response.setHttpStatusCode(HttpStatusCode.BAD_REQUEST);

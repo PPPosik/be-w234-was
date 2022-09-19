@@ -38,10 +38,16 @@ public class SignUpServiceHandler implements ServiceHandler {
     }
 
     private Response generateResponse(Request request, ResponseEntity entity) {
-        return new Response()
+        Response response = new Response()
                 .setHttpStatusCode(entity.getHttpStatusCode())
                 .setHeader("Content-Length", String.valueOf(entity.getBody().length))
                 .setHeader("Content-Type", Mime.getContentType(request.getPath(), request.getHeaders().get("accept")) + ";charset=utf-8")
                 .setBody(entity.getBody());
+
+        if (response.getHttpStatusCode() == HttpStatusCode.FOUND) {
+            response.setHeader("Location", "http://localhost:8080/index.html");
+        }
+
+        return response;
     }
 }
