@@ -13,6 +13,10 @@ public enum HttpMethod {
         this.method = method.toUpperCase();
     }
 
+    public String getMethod() {
+        return method;
+    }
+
     public static HttpMethod getByMethod(String method) {
         for (HttpMethod hm : values()) {
             if (hm.method.equals(method.toUpperCase())) {

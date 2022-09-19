@@ -16,15 +16,13 @@ public class SignUpServiceHandler implements ServiceHandler {
 
     @Override
     public Response handle(Request request) {
-        HttpMethod method = HttpMethod.getByMethod(request.getMethod());
-
         User user;
-        if (method == HttpMethod.GET) {
+        if (request.getMethod() == HttpMethod.GET) {
             user = generateUser(request.getParams());
-        } else if (method == HttpMethod.POST) {
+        } else if (request.getMethod() == HttpMethod.POST) {
             user = generateUser(request.getBody());
         } else {
-            throw new RequestParsingException(request.getMethod() + " 은 지원하지 않는 메서드입니다.");
+            throw new RequestParsingException(request.getMethod().getMethod() + " 은 지원하지 않는 메서드입니다.");
         }
 
         return generateResponse(request, signUpService.service(user));

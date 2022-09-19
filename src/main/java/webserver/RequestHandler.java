@@ -49,7 +49,7 @@ public class RequestHandler implements Runnable {
 
     private void printRequest() {
         if (logger.isDebugEnabled()) {
-            logger.debug("method : " + request.getMethod());
+            logger.debug("method : " + request.getMethod().getMethod());
             logger.debug("path : " + request.getPath());
             logger.debug("version : " + request.getVersion());
 
