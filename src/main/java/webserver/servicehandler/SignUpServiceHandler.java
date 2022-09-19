@@ -8,6 +8,7 @@ import webserver.service.SignUpService;
 import java.util.Map;
 
 public class SignUpServiceHandler implements ServiceHandler {
+    private final String REDIRET_PAGE = "http://localhost:8080/index.html";
     private final SignUpService signUpService;
 
     public SignUpServiceHandler(SignUpService signUpService) {
@@ -45,7 +46,7 @@ public class SignUpServiceHandler implements ServiceHandler {
                 .setBody(entity.getBody());
 
         if (response.getHttpStatusCode() == HttpStatusCode.FOUND) {
-            response.setHeader("Location", "http://localhost:8080/index.html");
+            response.setHeader("Location", REDIRET_PAGE);
         }
 
         return response;
