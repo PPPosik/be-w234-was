@@ -5,6 +5,8 @@ import model.User;
 import util.*;
 import webserver.service.SignUpService;
 
+import java.util.Map;
+
 public class SignUpServiceHandler implements ServiceHandler {
     private final SignUpService signUpService;
 
@@ -16,28 +18,32 @@ public class SignUpServiceHandler implements ServiceHandler {
     public Response handle(Request request) {
         HttpMethod method = HttpMethod.getByMethod(request.getMethod());
 
+        User user;
         if (method == HttpMethod.GET) {
-            return getHandle(request);
+            user = generateUser(request.getParams());
         } else if (method == HttpMethod.POST) {
-            return postHandle(request);
+            user = generateUser(request.getBody());
         } else {
             throw new RequestParsingException(request.getMethod() + " 은 지원하지 않는 메서드입니다.");
         }
+
+        return generateResponse(request, signUpService.service(user));
     }
 
-    private Response getHandle(Request request) {
-        final String userId = request.getParams().get("userId");
-        final String password = request.getParams().get("password");
-        final String name = request.getParams().get("name");
-        final String email = request.getParams().get("email");
+    private User generateUser(Map<String, String> data) {
+        final String userId = data.get("userId");
+        final String password = data.get("password");
+        final String name = data.get("name");
+        final String email = data.get("email");
 
-        User user = new User(userId, password, name, email);
-        ResponseEntity entity = signUpService.service(user);
-
-        return new Response().setHttpStatusCode(entity.getHttpStatusCode()).setHeader("Content-Length", String.valueOf(entity.getBody().length)).setHeader("Content-Type", Mime.getContentType(request.getPath(), request.getHeaders().get("accept")) + ";charset=utf-8").setBody(entity.getBody());
+        return new User(userId, password, name, email);
     }
 
-    private Response postHandle(Request request) {
-        return new Response().setHttpStatusCode(HttpStatusCode.CREATED).setBody("created");
+    private Response generateResponse(Request request, ResponseEntity entity) {
+        return new Response()
+                .setHttpStatusCode(entity.getHttpStatusCode())
+                .setHeader("Content-Length", String.valueOf(entity.getBody().length))
+                .setHeader("Content-Type", Mime.getContentType(request.getPath(), request.getHeaders().get("accept")) + ";charset=utf-8")
+                .setBody(entity.getBody());
     }
 }

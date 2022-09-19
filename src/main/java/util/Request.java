@@ -5,32 +5,12 @@ import java.util.Map;
 
 public class Request {
     private final String method;
-
-    public String getMethod() {
-        return method;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
     private final String path;
     private final String version;
 
-    public Map<String, String> getHeaders() {
-        return headers;
-    }
-
-    public Map<String, String> getParams() {
-        return params;
-    }
-
     private final Map<String, String> headers = new HashMap<>();
     private final Map<String, String> params = new HashMap<>();
+    private final Map<String, String> body = new HashMap<>();
 
     Request(String method, String path, String version) {
         this.method = method;
@@ -44,5 +24,33 @@ public class Request {
 
     public void addHeader(String name, String value) {
         headers.put(name, value);
+    }
+
+    public void addBody(String name, String value) {
+        body.put(name, value);
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public Map<String, String> getParams() {
+        return params;
+    }
+
+    public Map<String, String> getBody() {
+        return body;
     }
 }

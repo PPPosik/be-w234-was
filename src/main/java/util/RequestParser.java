@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.Map;
 
 public class RequestParser {
     private final InputStream in;
@@ -27,6 +25,7 @@ public class RequestParser {
             String requestLine = br.readLine();
             parseRequestLine(requestLine);
             parseHeaders(br);
+            parseBody(br);
         }
 
         return request;
@@ -65,5 +64,23 @@ public class RequestParser {
                 request.addHeader(splits[0].trim().toLowerCase(), splits[1].trim().toLowerCase());
             }
         }
+    }
+
+    private void parseBody(BufferedReader br) throws IOException {
+        int contentLength = request.getHeaders().get("content-length") != null ? Integer.parseInt(request.getHeaders().get("content-length")) : 0;
+        String bodyStr = readBody(br, contentLength);
+
+        for (String q : bodyStr.split("&")) {
+            String[] p = q.split("=");
+            if (p.length == 2) {
+                request.addBody(URLDecoder.decode(p[0], Charsets.UTF_8), URLDecoder.decode(p[1], Charsets.UTF_8));
+            }
+        }
+    }
+
+    private String readBody(BufferedReader br, int contentLength) throws IOException {
+        char[] body = new char[contentLength];
+        br.read(body, 0, contentLength);
+        return String.copyValueOf(body);
     }
 }
