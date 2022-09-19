@@ -26,7 +26,7 @@ public class StaticFileService {
         return "Hello World";
     }
 
-    private String serviceStaticFile(File file) throws IOException {
-        return Files.readString(file.toPath());
+    private byte[] serviceStaticFile(File file) throws IOException {
+        return Files.readAllBytes(file.toPath());
     }
 }

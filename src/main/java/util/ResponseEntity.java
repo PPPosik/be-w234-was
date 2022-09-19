@@ -12,6 +12,10 @@ public class ResponseEntity {
         this.body = body.getBytes();
     }
 
+    public void setBody(byte[] body) {
+        this.body = body;
+    }
+
     public HttpStatusCode getHttpStatusCode() {
         return httpStatusCode;
     }

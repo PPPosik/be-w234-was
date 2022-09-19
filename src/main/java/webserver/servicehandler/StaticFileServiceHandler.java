@@ -1,9 +1,6 @@
 package webserver.servicehandler;
 
-import util.HttpStatusCode;
-import util.Request;
-import util.Response;
-import util.ResponseEntity;
+import util.*;
 import webserver.service.StaticFileService;
 
 import java.io.File;
@@ -23,11 +20,10 @@ public class StaticFileServiceHandler implements ServiceHandler {
 
         ResponseEntity entity = staticFileService.service(file);
 
-        String accept = request.getHeaders().get("accept");
         return new Response()
                 .setHttpStatusCode(entity.getHttpStatusCode())
                 .setHeader("Content-Length", String.valueOf(entity.getBody().length))
-                .setHeader("Content-Type", accept.split(",")[0] + ";charset=utf-8")
+                .setHeader("Content-Type", Mime.getContentType(request.getPath(), request.getHeaders().get("accept")) + ";charset=utf-8")
                 .setBody(entity.getBody());
     }
 
