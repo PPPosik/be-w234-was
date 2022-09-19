@@ -1,5 +1,7 @@
 package model;
 
+import com.google.gson.Gson;
+
 public class User {
     private String userId;
     private String password;
@@ -31,20 +33,14 @@ public class User {
 
     @Override
     public String toString() {
-        return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + "]";
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
+        return new Gson().toJson("User [userId=" + userId + ", name=" + name + ", email=" + email + "]");
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof User) {
             return this.userId.equals(((User) obj).userId);
-        }
-        else {
+        } else {
             return false;
         }
     }

@@ -1,49 +1,48 @@
 package webserver.repository;
 
+import exception.UserSaveException;
 import model.User;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UserMemoryRepository implements UserRepository {
-    private static Map<Integer, User> users = new ConcurrentHashMap<>();
+    private static final Map<Integer, User> users = new ConcurrentHashMap<>();
     private static int sequence = 0;
 
     @Override
-    public User save(User user) {
+    public Optional<User> save(User user) {
         if (users.containsValue(user)) {
-            return null;
+            throw new UserSaveException(user + " 유저의 정보가 이미 존재합니다.");
         }
 
         users.put(sequence++, user);
-        return user;
+        return Optional.of(user);
     }
 
     @Override
-    public User findByUserId(String id) {
-        return null;
+    public Optional<User> findByUserId(String id) {
+        // TODO 기능 구현
+        return Optional.empty();
     }
 
     @Override
-    public List<User> findAll() {
-        List<User> list = new ArrayList<>();
-
-        for (User user : users.values()) {
-            list.add(user);
-        }
-
-        return list;
+    public Optional<List<User>> findAll() {
+        return Optional.of(new ArrayList<>(users.values()));
     }
 
     @Override
-    public User update(User user) {
-        return null;
+    public Optional<User> update(User user) {
+        // TODO 기능 구현
+        return Optional.empty();
     }
 
     @Override
     public boolean delete(User user) {
+        // TODO 기능 구현
         return false;
     }
 

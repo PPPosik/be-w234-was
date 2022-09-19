@@ -2,7 +2,8 @@ package webserver.repository;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import webserver.RequestParser;
+import util.Request;
+import util.RequestParser;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -25,20 +26,20 @@ class RequestParserTest {
                 "Accept: */*").getBytes());
 
         // index.html 호출
-        RequestParser requestParser1 = new RequestParser(in1);
+        Request request1 = new RequestParser(in1).parse();
 
-        assertThat(requestParser1.method).isEqualTo("GET");
-        assertThat(requestParser1.path).isEqualTo("/index.html");
-        assertThat(requestParser1.version).isEqualTo("HTTP/1.1");
+        assertThat(request1.getMethod()).isEqualTo("GET");
+        assertThat(request1.getPath()).isEqualTo("/index.html");
+        assertThat(request1.getVersion()).isEqualTo("HTTP/1.1");
 
-        assertThat(requestParser1.headers.size()).isEqualTo(3);
-        assertThat(requestParser1.headers.get("host")).isEqualTo("localhost:8080");
-        assertThat(requestParser1.headers.get("connection")).isEqualTo("keep-alive");
-        assertThat(requestParser1.headers.get("accept")).isEqualTo("*/*");
+        assertThat(request1.getHeaders().size()).isEqualTo(3);
+        assertThat(request1.getHeaders().get("host")).isEqualTo("localhost:8080");
+        assertThat(request1.getHeaders().get("connection")).isEqualTo("keep-alive");
+        assertThat(request1.getHeaders().get("accept")).isEqualTo("*/*");
 
         Assertions.assertThrows(Exception.class, () -> {
             // 유효하지 않은 호출
-            RequestParser requestParser2 = new RequestParser(in2);
+            Request request2 = new RequestParser(in2).parse();
         });
     }
 }

@@ -3,15 +3,16 @@ package webserver.repository;
 import model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository {
-    User save(User user);
+    Optional<User> save(User user);
 
-    User findByUserId(String id);
+    Optional<User> findByUserId(String id);
 
-    List<User> findAll();
+    Optional<List<User>> findAll();
 
-    User update(User user);
+    Optional<User> update(User user);
 
     boolean delete(User user);
 
