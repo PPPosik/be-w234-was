@@ -1,13 +1,11 @@
 package webserver.servicehandler;
 
+import enums.HttpStatusCode;
+import enums.Mime;
 import util.*;
 import webserver.service.StaticFileService;
 
-import java.io.File;
-import java.io.IOException;
-
 public class StaticFileServiceHandler implements ServiceHandler {
-    private final String RESOURCE_DIR = "webapp";
     private final StaticFileService staticFileService;
 
     public StaticFileServiceHandler(StaticFileService staticFileService) {
@@ -15,19 +13,22 @@ public class StaticFileServiceHandler implements ServiceHandler {
     }
 
     @Override
-    public Response handle(Request request) throws IOException {
-        File file = new File(getResourcePath(request.getPath()));
+    public Response handle(Request request) {
+        Response response = new Response();
+        byte[] body;
 
-        ResponseEntity entity = staticFileService.service(file);
+        try {
+            body = staticFileService.serviceStaticFile(request.getPath());
+            response.setHttpStatusCode(HttpStatusCode.OK);
+        } catch (Exception e) {
+            body = staticFileService.serviceDefault();
+            response.setHttpStatusCode(HttpStatusCode.NOT_FOUND);
+            System.out.println("e = " + e);
+        }
 
-        return new Response()
-                .setHttpStatusCode(entity.getHttpStatusCode())
-                .setHeader("Content-Length", String.valueOf(entity.getBody().length))
+        return response
+                .setHeader("Content-Length", String.valueOf(body.length))
                 .setHeader("Content-Type", Mime.getContentType(request.getPath(), request.getHeaders().get("accept")) + ";charset=utf-8")
-                .setBody(entity.getBody());
-    }
-
-    private String getResourcePath(String path) {
-        return RESOURCE_DIR + path;
+                .setBody(body);
     }
 }

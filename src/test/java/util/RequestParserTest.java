@@ -1,9 +1,7 @@
-package webserver.repository;
+package util;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import util.Request;
-import util.RequestParser;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

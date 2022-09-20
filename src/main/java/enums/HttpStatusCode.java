@@ -1,4 +1,4 @@
-package util;
+package enums;
 
 public enum HttpStatusCode {
     //1xx: Informational

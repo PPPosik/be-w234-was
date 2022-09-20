@@ -1,5 +1,7 @@
 package util;
 
+import enums.HttpMethod;
+
 import java.util.HashMap;
 import java.util.Map;
 
