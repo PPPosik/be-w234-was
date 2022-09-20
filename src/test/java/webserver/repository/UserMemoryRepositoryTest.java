@@ -61,4 +61,19 @@ class UserMemoryRepositoryTest {
         List<User> users = userRepository.findAll().get();
         assertThat(users.size()).isEqualTo(0);
     }
+
+    @Test
+    void findByIdTest() {
+        userRepository.save(user1);
+        userRepository.save(user2);
+
+        assertThat(userRepository.findByUserId(user1.getUserId()).get()).isSameAs(user1);
+        assertThat(userRepository.findByUserId(user2.getUserId()).get()).isSameAs(user2);
+    }
+
+    @Test
+    void findByIdNoneTest() {
+        assertThat(userRepository.findByUserId(user1.getUserId()).isPresent()).isFalse();
+    }
+
 }
