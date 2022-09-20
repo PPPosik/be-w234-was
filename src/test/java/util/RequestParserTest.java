@@ -1,9 +1,7 @@
-package webserver.repository;
+package util;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import util.Request;
-import util.RequestParser;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -28,7 +26,7 @@ class RequestParserTest {
         // index.html 호출
         Request request1 = new RequestParser(in1).parse();
 
-        assertThat(request1.getMethod()).isEqualTo("GET");
+        assertThat(request1.getMethod().getMethod()).isEqualTo("GET");
         assertThat(request1.getPath()).isEqualTo("/index.html");
         assertThat(request1.getVersion()).isEqualTo("HTTP/1.1");
 

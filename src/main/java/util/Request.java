@@ -1,12 +1,38 @@
 package util;
 
+import enums.HttpMethod;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class Request {
-    private final String method;
+    private final HttpMethod method;
+    private final String path;
+    private final String version;
 
-    public String getMethod() {
+    private final Map<String, String> headers = new HashMap<>();
+    private final Map<String, String> params = new HashMap<>();
+    private final Map<String, String> body = new HashMap<>();
+
+    Request(String method, String path, String version) {
+        this.method = HttpMethod.getByMethod(method);
+        this.path = path;
+        this.version = version;
+    }
+
+    public void addParam(String name, String value) {
+        params.put(name, value);
+    }
+
+    public void addHeader(String name, String value) {
+        headers.put(name, value);
+    }
+
+    public void addBody(String name, String value) {
+        body.put(name, value);
+    }
+
+    public HttpMethod getMethod() {
         return method;
     }
 
@@ -18,9 +44,6 @@ public class Request {
         return version;
     }
 
-    private final String path;
-    private final String version;
-
     public Map<String, String> getHeaders() {
         return headers;
     }
@@ -29,20 +52,7 @@ public class Request {
         return params;
     }
 
-    private final Map<String, String> headers = new HashMap<>();
-    private final Map<String, String> params = new HashMap<>();
-
-    Request(String method, String path, String version) {
-        this.method = method;
-        this.path = path;
-        this.version = version;
-    }
-
-    public void addParam(String name, String value) {
-        params.put(name, value);
-    }
-
-    public void addHeader(String name, String value) {
-        headers.put(name, value);
+    public Map<String, String> getBody() {
+        return body;
     }
 }

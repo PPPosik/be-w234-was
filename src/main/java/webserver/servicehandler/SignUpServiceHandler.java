@@ -1,13 +1,16 @@
 package webserver.servicehandler;
 
-import model.User;
-import util.Mime;
-import util.Request;
-import util.Response;
-import util.ResponseEntity;
+import enums.HttpMethod;
+import enums.HttpStatusCode;
+import enums.Mime;
+import exception.RequestParsingException;
+import util.*;
 import webserver.service.SignUpService;
 
+import java.util.Map;
+
 public class SignUpServiceHandler implements ServiceHandler {
+    private final String REDIRET_PAGE = "http://localhost:8080/index.html";
     private final SignUpService signUpService;
 
     public SignUpServiceHandler(SignUpService signUpService) {
@@ -16,18 +19,23 @@ public class SignUpServiceHandler implements ServiceHandler {
 
     @Override
     public Response handle(Request request) {
-        final String userId = request.getParams().get("userId");
-        final String password = request.getParams().get("password");
-        final String name = request.getParams().get("name");
-        final String email = request.getParams().get("email");
+        Response response = new Response();
 
-        User user = new User(userId, password, name, email);
-        ResponseEntity entity = signUpService.service(user);
+        if (request.getMethod() == HttpMethod.GET) {
+            serviceAndRedirect(request.getParams(), response);
+        } else if (request.getMethod() == HttpMethod.POST) {
+            serviceAndRedirect(request.getBody(), response);
+        } else {
+            throw new RequestParsingException(request.getMethod().getMethod() + " 은 지원하지 않는 메서드입니다.");
+        }
 
-        return new Response()
-                .setHttpStatusCode(entity.getHttpStatusCode())
-                .setHeader("Content-Length", String.valueOf(entity.getBody().length))
-                .setHeader("Content-Type", Mime.getContentType(request.getPath(), request.getHeaders().get("accept")) + ";charset=utf-8")
-                .setBody(entity.getBody());
+        return response
+                .setHeader("Content-Type", Mime.getContentType(request.getPath(), request.getHeaders().get("accept")) + ";charset=utf-8");
+    }
+
+    private void serviceAndRedirect(Map<String, String> userInfo, Response response) {
+        signUpService.service(userInfo);
+        response.setHttpStatusCode(HttpStatusCode.FOUND);
+        response.setHeader("Location", REDIRET_PAGE);
     }
 }
