@@ -1,5 +1,7 @@
 package util;
 
+import enums.HttpStatusCode;
+
 public class ResponseEntity {
     private byte[] body;
     private HttpStatusCode httpStatusCode = HttpStatusCode.OK;

@@ -1,4 +1,4 @@
-package util;
+package enums;
 
 public enum Mime {
     HTML("html", "text/html"),

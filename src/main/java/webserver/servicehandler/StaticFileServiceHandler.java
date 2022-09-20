@@ -1,5 +1,7 @@
 package webserver.servicehandler;
 
+import enums.HttpStatusCode;
+import enums.Mime;
 import util.*;
 import webserver.service.StaticFileService;
 
