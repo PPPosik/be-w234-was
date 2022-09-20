@@ -1,32 +1,26 @@
 package webserver.service;
 
-import util.HttpStatusCode;
-import util.ResponseEntity;
-
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 
 public class StaticFileService {
-    public ResponseEntity service(File file) throws IOException {
-        ResponseEntity response = new ResponseEntity();
+    private final String RESOURCE_DIR = "webapp";
+
+    public byte[] serviceDefault() {
+        return "Hello World".getBytes();
+    }
+
+    public byte[] serviceStaticFile(String path) throws Exception {
+        File file = new File(getResourcePath(path));
 
         if (file.exists()) {
-            response.setBody(serviceStaticFile(file));
-            response.setHttpStatusCode(HttpStatusCode.OK);
+            return Files.readAllBytes(file.toPath());
         } else {
-            response.setBody(serviceDefault());
-            response.setHttpStatusCode(HttpStatusCode.NOT_FOUND);
+            throw new IllegalArgumentException("파일을 찾을 수 없습니다.");
         }
-
-        return response;
     }
 
-    private String serviceDefault() {
-        return "Hello World";
-    }
-
-    private byte[] serviceStaticFile(File file) throws IOException {
-        return Files.readAllBytes(file.toPath());
+    private String getResourcePath(String path) {
+        return RESOURCE_DIR + path;
     }
 }
