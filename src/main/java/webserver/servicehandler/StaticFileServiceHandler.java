@@ -23,9 +23,10 @@ public class StaticFileServiceHandler implements ServiceHandler {
         } catch (Exception e) {
             body = staticFileService.serviceDefault();
             response.setHttpStatusCode(HttpStatusCode.NOT_FOUND);
+            System.out.println("e = " + e);
         }
 
-        return new Response()
+        return response
                 .setHeader("Content-Length", String.valueOf(body.length))
                 .setHeader("Content-Type", Mime.getContentType(request.getPath(), request.getHeaders().get("accept")) + ";charset=utf-8")
                 .setBody(body);
