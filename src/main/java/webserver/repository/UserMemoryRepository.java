@@ -3,15 +3,11 @@ package webserver.repository;
 import exception.UserSaveException;
 import model.User;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UserMemoryRepository implements UserRepository {
-    private static final Map<Integer, User> users = new ConcurrentHashMap<>();
-    private static int sequence = 0;
+    private static final Map<String, User> users = new ConcurrentHashMap<>();
 
     @Override
     public Optional<User> save(User user) {
@@ -19,14 +15,13 @@ public class UserMemoryRepository implements UserRepository {
             throw new UserSaveException(user + " 유저의 정보가 이미 존재합니다.");
         }
 
-        users.put(sequence++, user);
+        users.put(user.getUserId(), user);
         return Optional.of(user);
     }
 
     @Override
-    public Optional<User> findByUserId(String id) {
-        // TODO 기능 구현
-        return Optional.empty();
+    public Optional<User> findByUserId(String userId) {
+        return Optional.ofNullable(users.get(userId));
     }
 
     @Override

@@ -12,6 +12,10 @@ public class ResponseSender {
             out.writeBytes(entry.getKey() + ": " + entry.getValue() + "\r\n");
         }
 
+        if (response.getCookie().getSize() > 0) {
+            out.writeBytes("Set-Cookie: " + response.getCookie().toString() + "\r\n");
+        }
+
         out.writeBytes("\r\n");
         out.write(response.getBody(), 0, response.getBody().length);
         out.flush();
