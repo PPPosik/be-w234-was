@@ -72,7 +72,7 @@ class LoginServiceHandlerTest {
         Response response = handler.handle(loginSuccessRequest);
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.FOUND);
         assertThat(response.getHeaders().get("Location")).isEqualTo(LOGIN_SUCCESS_PAGE);
-        assertThat(response.getHeaders().get("Set-Cookie")).contains("logined=true");
+        assertThat(response.getCookie().get("logined")).isEqualTo("true");
     }
 
     @Test
@@ -80,6 +80,6 @@ class LoginServiceHandlerTest {
         Response response = handler.handle(loginFailRequest);
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.FOUND);
         assertThat(response.getHeaders().get("Location")).isEqualTo(LOGIN_FAIL_PAGE);
-        assertThat(response.getHeaders().get("Set-Cookie")).contains("logined=false");
+        assertThat(response.getCookie().get("logined")).isEqualTo("false");
     }
 }

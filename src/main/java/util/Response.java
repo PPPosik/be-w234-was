@@ -10,10 +10,12 @@ public class Response {
 
     private HttpStatusCode httpStatusCode;
     private byte[] body;
+    private Cookie cookie;
 
     public Response() {
         this.httpStatusCode = HttpStatusCode.OK;
         this.headers = new HashMap<>();
+        this.cookie = new Cookie();
     }
 
     public Map<String, String> getHeaders() {
@@ -26,6 +28,10 @@ public class Response {
 
     public byte[] getBody() {
         return body;
+    }
+
+    public Cookie getCookie() {
+        return cookie;
     }
 
     public Response setHttpStatusCode(int code) {
@@ -50,6 +56,11 @@ public class Response {
 
     public Response setBody(byte[] body) {
         this.body = body;
+        return this;
+    }
+
+    public Response setCookie(Cookie cookie) {
+        this.cookie = cookie;
         return this;
     }
 }

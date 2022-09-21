@@ -4,6 +4,7 @@ import enums.HttpMethod;
 import enums.HttpStatusCode;
 import enums.Mime;
 import exception.RequestParsingException;
+import util.Cookie;
 import util.Request;
 import util.Response;
 import webserver.service.LoginService;
@@ -24,6 +25,7 @@ public class LoginServiceHandler implements ServiceHandler {
         }
 
         Response response = new Response();
+        Cookie cookie = new Cookie();
 
         boolean login = loginService.login(request.getBody().get("userId"), request.getBody().get("password"));
         if (login) {
@@ -31,10 +33,13 @@ public class LoginServiceHandler implements ServiceHandler {
         } else {
             response.setHeader("Location", LOGIN_FAIL_PAGE);
         }
-        response.setHeader("Set-Cookie", "logined=" + login + ";Path=/");
+
+        cookie.put("logined", String.valueOf(login));
+        cookie.put("Path", "/");
 
         return response
                 .setHttpStatusCode(HttpStatusCode.FOUND)
-                .setHeader("Content-Type", Mime.getContentType(request.getPath(), request.getHeaders().get("accept")) + ";charset=utf-8");
+                .setHeader("Content-Type", Mime.getContentType(request.getPath(), request.getHeaders().get("accept")) + ";charset=utf-8")
+                .setCookie(cookie);
     }
 }
