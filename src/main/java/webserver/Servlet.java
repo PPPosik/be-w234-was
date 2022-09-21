@@ -1,5 +1,6 @@
 package webserver;
 
+import exception.NotAcceptableException;
 import exception.UserNotValidException;
 import exception.UserSaveException;
 import org.slf4j.Logger;
@@ -20,13 +21,19 @@ public class Servlet {
             logger.error(e.toString());
             return new Response()
                     .setHttpStatusCode(HttpStatusCode.BAD_REQUEST)
-                    .setHeader("Content-Type", Mime.NONE.getMime() +";charset=utf-8")
+                    .setHeader("Content-Type", Mime.NONE.getMime() + ";charset=utf-8")
+                    .setBody(e.getMessage());
+        } catch (NotAcceptableException e) {
+            logger.error(e.toString());
+            return new Response()
+                    .setHttpStatusCode(HttpStatusCode.NOT_ACCEPTABLE)
+                    .setHeader("Content-Type", Mime.NONE.getMime() + ";charset=utf-8")
                     .setBody(e.getMessage());
         } catch (Exception e) {
             logger.error(e.toString());
             return new Response()
                     .setHttpStatusCode(HttpStatusCode.INTERNAL_SERVER_ERROR)
-                    .setHeader("Content-Type", Mime.NONE.getMime()+";charset=utf-8")
+                    .setHeader("Content-Type", Mime.NONE.getMime() + ";charset=utf-8")
                     .setBody(e.getMessage());
         }
     }
