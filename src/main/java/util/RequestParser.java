@@ -11,6 +11,8 @@ import java.io.InputStreamReader;
 import java.net.URLDecoder;
 
 public class RequestParser {
+    private final String COOKIE_HEADER = "cookie";
+
     private final InputStream in;
     private Request request;
 
@@ -60,8 +62,25 @@ public class RequestParser {
 
         while (StringUtils.isNotBlank(line = br.readLine())) {
             String[] splits = line.split(":", 2);
-            if (splits.length == 2) {
-                request.addHeader(splits[0].trim().toLowerCase(), splits[1].trim().toLowerCase());
+            if (splits.length == 2 && splits[0] != null && splits[1] != null) {
+                String headerName = splits[0].trim().toLowerCase();
+                String headerValue = splits[1].trim().toLowerCase();
+
+                if (headerName.equals(COOKIE_HEADER)) {
+                    parseCookie(headerValue);
+                } else {
+                    request.addHeader(headerName, headerValue);
+                }
+            }
+        }
+    }
+
+    private void parseCookie(String values) {
+        for (String value : values.split(";")) {
+            String[] splits = value.split("=", 2);
+
+            if (splits.length == 2 && splits[0] != null && splits[1] != null) {
+                request.addCookie(splits[0].trim(), splits[1].trim());
             }
         }
     }

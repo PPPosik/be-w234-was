@@ -16,7 +16,8 @@ class RequestParserTest {
                 "GET /index.html HTTP/1.1\n" +
                 "Host: localhost:8080\n" +
                 "Connection: keep-alive\n" +
-                "Accept: */*").getBytes());
+                "Accept: */*\n" +
+                "Cookie: login=true; Expires=Wed").getBytes());
         InputStream in2 = new ByteArrayInputStream((
                 "A A\n" +
                 "Host: localhost:8080\n" +
@@ -34,6 +35,10 @@ class RequestParserTest {
         assertThat(request1.getHeaders().get("host")).isEqualTo("localhost:8080");
         assertThat(request1.getHeaders().get("connection")).isEqualTo("keep-alive");
         assertThat(request1.getHeaders().get("accept")).isEqualTo("*/*");
+
+        assertThat(request1.getCookie().getSize()).isEqualTo(2);
+        assertThat(request1.getCookie().get("login")).isEqualTo("true");
+        assertThat(request1.getCookie().get("expires")).isEqualTo("wed");
 
         Assertions.assertThrows(Exception.class, () -> {
             // 유효하지 않은 호출

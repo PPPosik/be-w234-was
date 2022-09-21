@@ -13,6 +13,7 @@ public class Request {
     private final Map<String, String> headers = new HashMap<>();
     private final Map<String, String> params = new HashMap<>();
     private final Map<String, String> body = new HashMap<>();
+    private final Cookie cookie = new Cookie();
 
     Request(String method, String path, String version) {
         this.method = HttpMethod.getByMethod(method);
@@ -30,6 +31,10 @@ public class Request {
 
     public void addBody(String name, String value) {
         body.put(name, value);
+    }
+
+    public void addCookie(String name, String value) {
+        cookie.put(name, value);
     }
 
     public HttpMethod getMethod() {
@@ -54,5 +59,9 @@ public class Request {
 
     public Map<String, String> getBody() {
         return body;
+    }
+
+    public Cookie getCookie() {
+        return cookie;
     }
 }
