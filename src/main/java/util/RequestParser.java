@@ -64,7 +64,7 @@ public class RequestParser {
             String[] splits = line.split(":", 2);
             if (splits.length == 2) {
                 String headerName = splits[0].trim().toLowerCase();
-                String headerValue = splits[1].trim().toLowerCase();
+                String headerValue = splits[1].trim();
 
                 if (headerName.equals(COOKIE_HEADER)) {
                     parseCookie(headerValue);
