@@ -27,7 +27,12 @@ public class RequestParser {
             String requestLine = br.readLine();
             parseRequestLine(requestLine);
             parseHeaders(br);
-            parseBody(br);
+
+            int contentLength = request.getHeaders().get("content-length") != null ? Integer.parseInt(request.getHeaders().get("content-length")) : 0;
+
+            if (contentLength > 0) {
+                parseBody(br, contentLength);
+            }
         }
 
         return request;
@@ -85,8 +90,7 @@ public class RequestParser {
         }
     }
 
-    private void parseBody(BufferedReader br) throws IOException {
-        int contentLength = request.getHeaders().get("content-length") != null ? Integer.parseInt(request.getHeaders().get("content-length")) : 0;
+    private void parseBody(BufferedReader br, int contentLength) throws IOException {
         String bodyStr = readBody(br, contentLength);
 
         for (String q : bodyStr.split("&")) {
