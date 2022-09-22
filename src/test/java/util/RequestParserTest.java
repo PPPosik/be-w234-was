@@ -38,7 +38,7 @@ class RequestParserTest {
 
         assertThat(request1.getCookie().getSize()).isEqualTo(2);
         assertThat(request1.getCookie().get("login")).isEqualTo("true");
-        assertThat(request1.getCookie().get("expires")).isEqualTo("wed");
+        assertThat(request1.getCookie().get("Expires")).isEqualTo("Wed");
 
         Assertions.assertThrows(Exception.class, () -> {
             // 유효하지 않은 호출

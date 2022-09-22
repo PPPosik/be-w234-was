@@ -19,7 +19,7 @@ public enum HttpMethod {
 
     public static HttpMethod getByMethod(String method) {
         for (HttpMethod hm : values()) {
-            if (hm.method.equals(method.toUpperCase())) {
+            if (hm.method.equalsIgnoreCase(method)) {
                 return hm;
             }
         }
