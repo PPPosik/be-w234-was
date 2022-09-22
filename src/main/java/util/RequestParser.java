@@ -62,7 +62,7 @@ public class RequestParser {
 
         while (StringUtils.isNotBlank(line = br.readLine())) {
             String[] splits = line.split(":", 2);
-            if (splits.length == 2 && splits[0] != null && splits[1] != null) {
+            if (splits.length == 2) {
                 String headerName = splits[0].trim().toLowerCase();
                 String headerValue = splits[1].trim().toLowerCase();
 
@@ -79,7 +79,7 @@ public class RequestParser {
         for (String value : values.split(";")) {
             String[] splits = value.split("=", 2);
 
-            if (splits.length == 2 && splits[0] != null && splits[1] != null) {
+            if (splits.length == 2) {
                 request.addCookie(splits[0].trim(), splits[1].trim());
             }
         }
