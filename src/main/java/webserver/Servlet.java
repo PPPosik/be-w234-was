@@ -1,5 +1,6 @@
 package webserver;
 
+import exception.NotAcceptableException;
 import exception.UserNotValidException;
 import exception.UserSaveException;
 import org.slf4j.Logger;
@@ -19,6 +20,9 @@ public class Servlet {
         } catch (UserSaveException | UserNotValidException e) {
             logger.error(e.toString());
             return generateErrorResponse(HttpStatusCode.BAD_REQUEST, e);
+        } catch (NotAcceptableException e) {
+            logger.error(e.toString());
+            return generateErrorResponse(HttpStatusCode.NOT_ACCEPTABLE, e);
         } catch (Exception e) {
             logger.error(e.toString());
             return generateErrorResponse(HttpStatusCode.INTERNAL_SERVER_ERROR, e);
