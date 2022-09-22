@@ -27,7 +27,12 @@ public class RequestParser {
             String requestLine = br.readLine();
             parseRequestLine(requestLine);
             parseHeaders(br);
-            parseBody(br);
+
+            int contentLength = request.getHeaders().get("content-length") != null ? Integer.parseInt(request.getHeaders().get("content-length")) : 0;
+
+            if (contentLength > 0) {
+                parseBody(br, contentLength);
+            }
         }
 
         return request;
@@ -62,11 +67,11 @@ public class RequestParser {
 
         while (StringUtils.isNotBlank(line = br.readLine())) {
             String[] splits = line.split(":", 2);
-            if (splits.length == 2 && splits[0] != null && splits[1] != null) {
+            if (splits.length == 2) {
                 String headerName = splits[0].trim().toLowerCase();
-                String headerValue = splits[1].trim().toLowerCase();
+                String headerValue = splits[1].trim();
 
-                if (headerName.equals(COOKIE_HEADER)) {
+                if (headerName.equalsIgnoreCase(COOKIE_HEADER)) {
                     parseCookie(headerValue);
                 } else {
                     request.addHeader(headerName, headerValue);
@@ -79,14 +84,13 @@ public class RequestParser {
         for (String value : values.split(";")) {
             String[] splits = value.split("=", 2);
 
-            if (splits.length == 2 && splits[0] != null && splits[1] != null) {
+            if (splits.length == 2) {
                 request.addCookie(splits[0].trim(), splits[1].trim());
             }
         }
     }
 
-    private void parseBody(BufferedReader br) throws IOException {
-        int contentLength = request.getHeaders().get("content-length") != null ? Integer.parseInt(request.getHeaders().get("content-length")) : 0;
+    private void parseBody(BufferedReader br, int contentLength) throws IOException {
         String bodyStr = readBody(br, contentLength);
 
         for (String q : bodyStr.split("&")) {

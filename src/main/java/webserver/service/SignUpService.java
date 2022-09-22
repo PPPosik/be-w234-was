@@ -21,11 +21,7 @@ public class SignUpService {
             throw new UserNotValidException(user + " 유효하지 않은 유저 정보입니다.");
         }
 
-        if (userRepository.save(user).isPresent()) {
-            return user;
-        } else {
-            throw new UserNotValidException(user + " 유저 정보 저장에 실패했습니다.");
-        }
+        return userRepository.save(user).orElseThrow(() -> new UserNotValidException(user + " 유저 정보 저장에 실패했습니다."));
     }
 
     private User generateUser(Map<String, String> userInfo) {
