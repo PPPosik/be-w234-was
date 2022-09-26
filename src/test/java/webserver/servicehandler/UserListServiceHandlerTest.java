@@ -50,7 +50,7 @@ class UserListServiceHandlerTest {
                         "GET /user/list HTTP/1.1\n" +
                         "Host: localhost:8080\n" +
                         "Connection: keep-alive\n" +
-                        "Accept: */*").getBytes())).parse();
+                        "Accept: text/html, text/plain, */*").getBytes())).parse();
 
         loginFalseRequest = new RequestParser(
                 new ByteArrayInputStream((

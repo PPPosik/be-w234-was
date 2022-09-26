@@ -21,6 +21,7 @@ public class UserListServiceHandler implements ServiceHandler {
 
     @Override
     public Response handle(Request request) {
+        Mime mime = canAcceptHtml(request.getHeaders().get("accept"));
         Response response = new Response();
         Boolean isLogined = Boolean.valueOf(request.getCookie().get("logined"));
 
@@ -31,7 +32,6 @@ public class UserListServiceHandler implements ServiceHandler {
                     .setHead("title", "header title")
                     .setBody("h2", "유저 목록입니다.")
                     .build();
-            Mime mime = canAcceptHtml(request.getHeaders().get("accept"));
 
             response.setHttpStatusCode(HttpStatusCode.OK)
                     .setBody(body)
