@@ -21,18 +21,20 @@ public class RequestParser {
         this.in = inputStream;
     }
 
-    public Request parse() throws Exception {
+    public Request parse() {
         if (request == null) {
-            BufferedReader br = new BufferedReader(new InputStreamReader(in, Charsets.UTF_8));
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(in, Charsets.UTF_8))) {
+                String requestLine = br.readLine();
+                parseRequestLine(requestLine);
+                parseHeaders(br);
 
-            String requestLine = br.readLine();
-            parseRequestLine(requestLine);
-            parseHeaders(br);
+                int contentLength = Integer.parseInt(Optional.ofNullable(request.getHeaders().get("content-length")).orElse("0"));
 
-            int contentLength = Integer.parseInt(Optional.ofNullable(request.getHeaders().get("content-length")).orElse("0"));
-
-            if (contentLength > 0) {
-                parseBody(br, contentLength);
+                if (contentLength > 0) {
+                    parseBody(br, contentLength);
+                }
+            } catch (Exception e) {
+                throw new RequestParsingException(e.getMessage());
             }
         }
 
