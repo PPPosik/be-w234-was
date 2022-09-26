@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
+import java.util.Optional;
 
 public class RequestParser {
     private final String COOKIE_HEADER = "cookie";
@@ -28,7 +29,7 @@ public class RequestParser {
             parseRequestLine(requestLine);
             parseHeaders(br);
 
-            int contentLength = request.getHeaders().get("content-length") != null ? Integer.parseInt(request.getHeaders().get("content-length")) : 0;
+            int contentLength = Integer.parseInt(Optional.ofNullable(request.getHeaders().get("content-length")).orElse("0"));
 
             if (contentLength > 0) {
                 parseBody(br, contentLength);
