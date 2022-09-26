@@ -1,5 +1,7 @@
 package enums;
 
+import exception.NotAcceptableException;
+
 public enum Mime {
     HTML("html", "text/html"),
     CSS("css", "text/css"),
@@ -29,7 +31,7 @@ public enum Mime {
 
     public static Mime getByType(String type) {
         for (Mime m : values()) {
-            if (m.getType().equals(type)) {
+            if (m.getType().equalsIgnoreCase(type)) {
                 return m;
             }
         }
@@ -43,11 +45,19 @@ public enum Mime {
 
         Mime mime = getByType(pathSplits[pathSplits.length - 1]);
         for (String s : acceptSplits) {
-            if (s.equals(mime.getMime()) || s.equals(ALL.getMime())) {
+            if (s.equalsIgnoreCase(mime.getMime()) || s.equalsIgnoreCase(ALL.getMime())) {
                 return mime.getMime();
             }
         }
 
         return NONE.getMime();
+    }
+
+    public static Mime canAcceptHtml(String accept) {
+        if (accept.contains(Mime.HTML.getMime())) {
+            return Mime.HTML;
+        } else {
+            throw new NotAcceptableException("HTML을 지원하지 않는 형식입니다.");
+        }
     }
 }
