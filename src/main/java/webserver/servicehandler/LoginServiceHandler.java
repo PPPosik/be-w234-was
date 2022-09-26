@@ -35,6 +35,7 @@ public class LoginServiceHandler implements ServiceHandler {
         }
 
         cookie.put("logined", String.valueOf(login));
+        cookie.put("id", request.getBody().get("userId"));
         cookie.put("Path", "/");
 
         return response
