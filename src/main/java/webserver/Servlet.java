@@ -1,5 +1,6 @@
 package webserver;
 
+import exception.NotAcceptableException;
 import exception.UserNotValidException;
 import exception.UserSaveException;
 import org.slf4j.Logger;
@@ -18,16 +19,20 @@ public class Servlet {
             return ServiceHandlerMapper.getHandler(request.getPath()).handle(request);
         } catch (UserSaveException | UserNotValidException e) {
             logger.error(e.toString());
-            return new Response()
-                    .setHttpStatusCode(HttpStatusCode.BAD_REQUEST)
-                    .setHeader("Content-Type", Mime.NONE.getMime() +";charset=utf-8")
-                    .setBody(e.getMessage());
+            return generateErrorResponse(HttpStatusCode.BAD_REQUEST, e);
+        } catch (NotAcceptableException e) {
+            logger.error(e.toString());
+            return generateErrorResponse(HttpStatusCode.NOT_ACCEPTABLE, e);
         } catch (Exception e) {
             logger.error(e.toString());
-            return new Response()
-                    .setHttpStatusCode(HttpStatusCode.INTERNAL_SERVER_ERROR)
-                    .setHeader("Content-Type", Mime.NONE.getMime()+";charset=utf-8")
-                    .setBody(e.getMessage());
+            return generateErrorResponse(HttpStatusCode.INTERNAL_SERVER_ERROR, e);
         }
+    }
+
+    private Response generateErrorResponse(HttpStatusCode httpStatusCode, Exception e) {
+        return new Response()
+                .setHttpStatusCode(httpStatusCode)
+                .setHeader("Content-Type", Mime.NONE.getMime()+";charset=utf-8")
+                .setBody(e.getMessage());
     }
 }
