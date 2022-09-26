@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
+import java.util.Optional;
 
 public class RequestParser {
     private final String COOKIE_HEADER = "cookie";
@@ -20,18 +21,20 @@ public class RequestParser {
         this.in = inputStream;
     }
 
-    public Request parse() throws Exception {
+    public Request parse() {
         if (request == null) {
-            BufferedReader br = new BufferedReader(new InputStreamReader(in, Charsets.UTF_8));
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(in, Charsets.UTF_8))) {
+                String requestLine = br.readLine();
+                parseRequestLine(requestLine);
+                parseHeaders(br);
 
-            String requestLine = br.readLine();
-            parseRequestLine(requestLine);
-            parseHeaders(br);
+                int contentLength = Integer.parseInt(Optional.ofNullable(request.getHeaders().get("content-length")).orElse("0"));
 
-            int contentLength = request.getHeaders().get("content-length") != null ? Integer.parseInt(request.getHeaders().get("content-length")) : 0;
-
-            if (contentLength > 0) {
-                parseBody(br, contentLength);
+                if (contentLength > 0) {
+                    parseBody(br, contentLength);
+                }
+            } catch (Exception e) {
+                throw new RequestParsingException(e.getMessage());
             }
         }
 
@@ -71,7 +74,7 @@ public class RequestParser {
                 String headerName = splits[0].trim().toLowerCase();
                 String headerValue = splits[1].trim();
 
-                if (headerName.equalsIgnoreCase(COOKIE_HEADER)) {
+                if (headerName.equals(COOKIE_HEADER)) {
                     parseCookie(headerValue);
                 } else {
                     request.addHeader(headerName, headerValue);

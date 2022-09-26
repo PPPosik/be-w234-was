@@ -2,7 +2,6 @@ package webserver.servicehandler;
 
 import enums.HttpStatusCode;
 import enums.Mime;
-import exception.NotAcceptableException;
 import model.User;
 import util.Request;
 import util.Response;
@@ -21,6 +20,7 @@ public class UserListServiceHandler implements ServiceHandler {
 
     @Override
     public Response handle(Request request) {
+        Mime mime = Mime.canAcceptHtml(request.getHeaders().get("accept"));
         Response response = new Response();
         Boolean isLogined = Boolean.valueOf(request.getCookie().get("logined"));
 
@@ -31,7 +31,6 @@ public class UserListServiceHandler implements ServiceHandler {
                     .setHead("title", "header title")
                     .setBody("h2", "유저 목록입니다.")
                     .build();
-            Mime mime = canAcceptHtml(request.getHeaders().get("accept"));
 
             response.setHttpStatusCode(HttpStatusCode.OK)
                     .setBody(body)
@@ -43,13 +42,5 @@ public class UserListServiceHandler implements ServiceHandler {
         }
 
         return response;
-    }
-
-    private Mime canAcceptHtml(String accept) {
-        if (accept.contains(Mime.HTML.getMime())) {
-            return Mime.HTML;
-        } else {
-            throw new NotAcceptableException("지원하지 않는 형식입니다.");
-        }
     }
 }

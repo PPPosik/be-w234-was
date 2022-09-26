@@ -1,5 +1,7 @@
 package enums;
 
+import exception.NotAcceptableException;
+
 public enum Mime {
     HTML("html", "text/html"),
     CSS("css", "text/css"),
@@ -49,5 +51,13 @@ public enum Mime {
         }
 
         return NONE.getMime();
+    }
+
+    public static Mime canAcceptHtml(String accept) {
+        if (accept.contains(Mime.HTML.getMime())) {
+            return Mime.HTML;
+        } else {
+            throw new NotAcceptableException("HTML을 지원하지 않는 형식입니다.");
+        }
     }
 }
