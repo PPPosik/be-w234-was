@@ -4,8 +4,6 @@ import enums.HttpMethod;
 import enums.HttpStatusCode;
 import enums.Mime;
 import exception.BadRequestException;
-import exception.HttpException;
-import exception.RequestParsingException;
 import util.Cookie;
 import util.Request;
 import util.Response;
