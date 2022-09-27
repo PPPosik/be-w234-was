@@ -1,6 +1,6 @@
 package webserver;
 
-import exception.*;
+import exception.http.HttpException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import enums.HttpStatusCode;

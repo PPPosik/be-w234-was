@@ -1,7 +1,7 @@
 package webserver.servicehandler;
 
 import enums.HttpStatusCode;
-import exception.RequestParsingException;
+import exception.http.RequestParsingException;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

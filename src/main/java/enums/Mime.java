@@ -1,6 +1,6 @@
 package enums;
 
-import exception.NotAcceptableException;
+import exception.http.NotAcceptableException;
 
 public enum Mime {
     HTML("html", "text/html"),

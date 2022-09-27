@@ -2,7 +2,7 @@ package webserver.servicehandler;
 
 import enums.HttpStatusCode;
 import enums.Mime;
-import exception.HttpException;
+import exception.http.HttpException;
 import util.http.Request;
 import util.http.Response;
 import webserver.service.StaticFileService;

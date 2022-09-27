@@ -1,6 +1,6 @@
 package webserver.servicehandler;
 
-import exception.HttpException;
+import exception.http.HttpException;
 import util.http.Request;
 import util.http.Response;
 

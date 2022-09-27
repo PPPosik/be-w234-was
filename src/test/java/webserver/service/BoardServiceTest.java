@@ -1,6 +1,6 @@
 package webserver.service;
 
-import exception.UnauthorizedUserException;
+import exception.http.UnauthorizedUserException;
 import model.Board;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;

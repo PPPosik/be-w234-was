@@ -3,7 +3,7 @@ package webserver.servicehandler;
 import enums.HttpMethod;
 import enums.HttpStatusCode;
 import enums.Mime;
-import exception.BadRequestException;
+import exception.http.BadRequestException;
 import util.http.Cookie;
 import util.http.Request;
 import util.http.Response;

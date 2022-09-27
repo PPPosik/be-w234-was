@@ -1,6 +1,6 @@
 package webserver.service;
 
-import exception.UnauthorizedUserException;
+import exception.http.UnauthorizedUserException;
 import exception.UserSaveException;
 import model.User;
 import model.UserValidator;

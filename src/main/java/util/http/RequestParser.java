@@ -2,9 +2,9 @@ package util.http;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import com.google.common.base.Charsets;
-import exception.BadRequestException;
-import exception.HttpException;
-import exception.RequestParsingException;
+import exception.http.BadRequestException;
+import exception.http.HttpException;
+import exception.http.RequestParsingException;
 
 import java.io.BufferedReader;
 import java.io.IOException;

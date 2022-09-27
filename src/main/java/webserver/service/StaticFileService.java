@@ -1,8 +1,8 @@
 package webserver.service;
 
-import exception.HttpException;
-import exception.PageNotFoundException;
-import exception.RequestParsingException;
+import exception.http.HttpException;
+import exception.http.PageNotFoundException;
+import exception.http.RequestParsingException;
 
 import java.io.File;
 import java.io.IOException;

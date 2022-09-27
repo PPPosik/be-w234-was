@@ -2,7 +2,7 @@ package webserver.servicehandler;
 
 import enums.HttpStatusCode;
 import enums.Mime;
-import exception.NotAcceptableException;
+import exception.http.NotAcceptableException;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

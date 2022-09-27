@@ -2,10 +2,10 @@ package webserver.servicehandler;
 
 import enums.HttpMethod;
 import enums.HttpStatusCode;
-import exception.BadRequestException;
-import exception.HttpException;
-import exception.PageNotFoundException;
-import exception.UnauthorizedUserException;
+import exception.http.BadRequestException;
+import exception.http.HttpException;
+import exception.http.PageNotFoundException;
+import exception.http.UnauthorizedUserException;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
