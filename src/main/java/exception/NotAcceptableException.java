@@ -1,7 +1,9 @@
 package exception;
 
-public class NotAcceptableException extends RuntimeException {
+import enums.HttpStatusCode;
+
+public class NotAcceptableException extends HttpException {
     public NotAcceptableException(String message) {
-        super(message);
+        super(HttpStatusCode.NOT_ACCEPTABLE, message);
     }
 }

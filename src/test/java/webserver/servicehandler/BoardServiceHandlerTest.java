@@ -2,9 +2,10 @@ package webserver.servicehandler;
 
 import enums.HttpMethod;
 import enums.HttpStatusCode;
-import exception.BoardSaveException;
+import exception.BadRequestException;
+import exception.HttpException;
 import exception.PageNotFoundException;
-import exception.UserNotValidException;
+import exception.UnauthorizedUserException;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +49,7 @@ public class BoardServiceHandlerTest {
     }
 
     @Test
-    void saveBoardTest() {
+    void saveBoardTest() throws HttpException {
         Response response = handler.handle(boardSaveRequest);
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.CREATED);
         assertThat(new String(response.getBody())).isEqualTo("게시글 작성에 성공했습니다.");
@@ -58,11 +59,11 @@ public class BoardServiceHandlerTest {
     void saveBoardNotValidUserTest() {
         boardSaveRequest.addCookie("id", "user3");
 
-        assertThrows(UserNotValidException.class, () -> handler.handle(boardSaveRequest));
+        assertThrows(UnauthorizedUserException.class, () -> handler.handle(boardSaveRequest));
     }
 
     @Test
-    void getBoardListTest() {
+    void getBoardListTest() throws HttpException {
         boardSaveRequest.addCookie("id", user1.getUserId());
         boardSaveRequest.addBody("content", "content1");
         handler.handle(boardSaveRequest);
@@ -89,6 +90,6 @@ public class BoardServiceHandlerTest {
     void noCookieTest() {
         Request request = new Request(HttpMethod.POST.getMethod(), "/board", "HTTP/1.1");
 
-        assertThrows(BoardSaveException.class, () -> handler.handle(request));
+        assertThrows(BadRequestException.class, () -> handler.handle(request));
     }
 }

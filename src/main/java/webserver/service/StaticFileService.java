@@ -1,6 +1,11 @@
 package webserver.service;
 
+import exception.HttpException;
+import exception.PageNotFoundException;
+import exception.RequestParsingException;
+
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 
 public class StaticFileService {
@@ -10,13 +15,17 @@ public class StaticFileService {
         return "Hello World".getBytes();
     }
 
-    public byte[] serviceStaticFile(String path) throws Exception {
+    public byte[] serviceStaticFile(String path) throws HttpException {
         File file = new File(getResourcePath(path));
 
         if (file.exists()) {
-            return Files.readAllBytes(file.toPath());
+            try {
+                return Files.readAllBytes(file.toPath());
+            } catch (IOException e) {
+                throw new RequestParsingException("파일 읽기에 실패했습니다.");
+            }
         } else {
-            throw new IllegalArgumentException("파일을 찾을 수 없습니다.");
+            throw new PageNotFoundException("파일을 찾을 수 없습니다.");
         }
     }
 

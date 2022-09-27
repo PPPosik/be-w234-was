@@ -53,7 +53,7 @@ public enum Mime {
         return NONE.getMime();
     }
 
-    public static Mime canAcceptHtml(String accept) {
+    public static Mime canAcceptHtml(String accept) throws NotAcceptableException {
         if (accept.contains(Mime.HTML.getMime())) {
             return Mime.HTML;
         } else {

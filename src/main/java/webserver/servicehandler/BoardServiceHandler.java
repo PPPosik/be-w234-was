@@ -3,8 +3,7 @@ package webserver.servicehandler;
 import enums.HttpMethod;
 import enums.HttpStatusCode;
 import enums.Mime;
-import exception.BoardSaveException;
-import exception.PageNotFoundException;
+import exception.*;
 import model.Board;
 import util.Cookie;
 import util.Request;
@@ -21,7 +20,7 @@ public class BoardServiceHandler implements ServiceHandler {
     }
 
     @Override
-    public Response handle(Request request) {
+    public Response handle(Request request) throws HttpException {
         String path = request.getPath();
 
         if (request.getMethod() == HttpMethod.POST && "/board".equals(path)) {
@@ -29,15 +28,15 @@ public class BoardServiceHandler implements ServiceHandler {
         } else if (request.getMethod() == HttpMethod.GET && "/board/list".equals(path)) {
             return getBoardList(request);
         } else {
-            throw new PageNotFoundException(request.getPath() + " 를 찾을 수 없습니다.");
+            throw new BadRequestException(request.getMethod().getMethod() + " " + request.getPath() + "은 잘못된 요청입니다.");
         }
     }
 
-    private Response saveBoard(Request request) {
+    private Response saveBoard(Request request) throws UnauthorizedUserException {
         if (canWriteBoard(request.getCookie())) {
             service.saveBoard(request.getCookie().get("id"), request.getBody().get("content"));
         } else {
-            throw new BoardSaveException("로그인한 사용자만 게시글을 작성할 수 있습니다.");
+            throw new UnauthorizedUserException("로그인한 사용자만 게시글을 작성할 수 있습니다.");
         }
 
         return new Response()

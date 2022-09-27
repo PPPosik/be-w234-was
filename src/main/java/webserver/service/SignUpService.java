@@ -1,6 +1,7 @@
 package webserver.service;
 
-import exception.UserNotValidException;
+import exception.UnauthorizedUserException;
+import exception.UserSaveException;
 import model.User;
 import model.UserValidator;
 import webserver.repository.UserRepository;
@@ -14,14 +15,14 @@ public class SignUpService {
         this.userRepository = userRepository;
     }
 
-    public User service(Map<String, String> userInfo) {
+    public User service(Map<String, String> userInfo) throws UnauthorizedUserException {
         User user = generateUser(userInfo);
 
         if (UserValidator.isNotValidUser(user)) {
-            throw new UserNotValidException(user + " 유효하지 않은 유저 정보입니다.");
+            throw new UnauthorizedUserException(user + " 유효하지 않은 유저 정보입니다.");
         }
 
-        return userRepository.save(user).orElseThrow(() -> new UserNotValidException(user + " 유저 정보 저장에 실패했습니다."));
+        return userRepository.save(user).orElseThrow(() -> new UserSaveException(user + " 유저 정보 저장에 실패했습니다."));
     }
 
     private User generateUser(Map<String, String> userInfo) {

@@ -3,7 +3,9 @@ package webserver.servicehandler;
 import enums.HttpMethod;
 import enums.HttpStatusCode;
 import enums.Mime;
+import exception.HttpException;
 import exception.RequestParsingException;
+import exception.UnauthorizedUserException;
 import util.*;
 import webserver.service.SignUpService;
 
@@ -18,7 +20,7 @@ public class SignUpServiceHandler implements ServiceHandler {
     }
 
     @Override
-    public Response handle(Request request) {
+    public Response handle(Request request) throws HttpException {
         Response response = new Response();
 
         if (request.getMethod() == HttpMethod.GET) {
@@ -33,7 +35,7 @@ public class SignUpServiceHandler implements ServiceHandler {
                 .setHeader("Content-Type", Mime.getContentType(request.getPath(), request.getHeaders().get("accept")) + ";charset=utf-8");
     }
 
-    private void serviceAndRedirect(Map<String, String> userInfo, Response response) {
+    private void serviceAndRedirect(Map<String, String> userInfo, Response response) throws UnauthorizedUserException {
         signUpService.service(userInfo);
         response.setHttpStatusCode(HttpStatusCode.FOUND);
         response.setHeader("Location", REDIRET_PAGE);

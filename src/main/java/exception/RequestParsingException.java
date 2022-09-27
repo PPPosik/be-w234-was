@@ -1,7 +1,9 @@
 package exception;
 
-public class RequestParsingException extends RuntimeException {
+import enums.HttpStatusCode;
+
+public class RequestParsingException extends HttpException {
     public RequestParsingException(String message) {
-        super(message);
+        super(HttpStatusCode.INTERNAL_SERVER_ERROR, message);
     }
 }

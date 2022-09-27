@@ -2,6 +2,7 @@ package webserver.servicehandler;
 
 import enums.HttpStatusCode;
 import enums.Mime;
+import exception.HttpException;
 import util.*;
 import webserver.service.StaticFileService;
 
@@ -13,20 +14,11 @@ public class StaticFileServiceHandler implements ServiceHandler {
     }
 
     @Override
-    public Response handle(Request request) {
-        Response response = new Response();
-        byte[] body;
+    public Response handle(Request request) throws HttpException{
+        byte[] body = staticFileService.serviceStaticFile(request.getPath());
 
-        try {
-            body = staticFileService.serviceStaticFile(request.getPath());
-            response.setHttpStatusCode(HttpStatusCode.OK);
-        } catch (Exception e) {
-            body = staticFileService.serviceDefault();
-            response.setHttpStatusCode(HttpStatusCode.NOT_FOUND);
-            System.out.println("e = " + e);
-        }
-
-        return response
+        return new Response()
+                .setHttpStatusCode(HttpStatusCode.OK)
                 .setHeader("Content-Length", String.valueOf(body.length))
                 .setHeader("Content-Type", Mime.getContentType(request.getPath(), request.getHeaders().get("accept")) + ";charset=utf-8")
                 .setBody(body);

@@ -2,6 +2,7 @@ package webserver.servicehandler;
 
 import enums.HttpStatusCode;
 import enums.Mime;
+import exception.HttpException;
 import model.User;
 import util.Request;
 import util.Response;
@@ -19,10 +20,10 @@ public class UserListServiceHandler implements ServiceHandler {
     }
 
     @Override
-    public Response handle(Request request) {
+    public Response handle(Request request) throws HttpException {
         Mime mime = Mime.canAcceptHtml(request.getHeaders().get("accept"));
-        Response response = new Response();
         Boolean isLogined = Boolean.valueOf(request.getCookie().get("logined"));
+        Response response = new Response();
 
         if (isLogined) {
             List<User> users = service.getUserList();

@@ -2,6 +2,8 @@ package util;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import com.google.common.base.Charsets;
+import exception.BadRequestException;
+import exception.HttpException;
 import exception.RequestParsingException;
 
 import java.io.BufferedReader;
@@ -21,7 +23,7 @@ public class RequestParser {
         this.in = inputStream;
     }
 
-    public Request parse() {
+    public Request parse() throws HttpException {
         if (request == null) {
             try {
                 BufferedReader br = new BufferedReader(new InputStreamReader(in, Charsets.UTF_8));
@@ -42,11 +44,11 @@ public class RequestParser {
         return request;
     }
 
-    private void parseRequestLine(String str) {
+    private void parseRequestLine(String str) throws BadRequestException {
         String[] splits = str.split(" ");
 
         if (splits.length != 3) {
-            throw new RequestParsingException("잘못된 요청입니다.");
+            throw new BadRequestException("잘못된 요청입니다.");
         }
 
         String[] pathWithParam = splits[1].split("\\?", 2);

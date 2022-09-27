@@ -1,10 +1,9 @@
 package webserver.servicehandler;
 
+import exception.HttpException;
 import util.Request;
 import util.Response;
 
-import java.io.IOException;
-
 public interface ServiceHandler {
-    Response handle(Request request) throws IOException;
+    Response handle(Request request) throws HttpException;
 }

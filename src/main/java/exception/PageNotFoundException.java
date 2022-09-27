@@ -1,7 +1,9 @@
 package exception;
 
-public class PageNotFoundException extends RuntimeException {
+import enums.HttpStatusCode;
+
+public class PageNotFoundException extends HttpException {
     public PageNotFoundException(String message) {
-        super(message);
+        super(HttpStatusCode.NOT_FOUND, message);
     }
 }

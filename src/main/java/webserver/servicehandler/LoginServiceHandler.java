@@ -3,6 +3,8 @@ package webserver.servicehandler;
 import enums.HttpMethod;
 import enums.HttpStatusCode;
 import enums.Mime;
+import exception.BadRequestException;
+import exception.HttpException;
 import exception.RequestParsingException;
 import util.Cookie;
 import util.Request;
@@ -19,9 +21,9 @@ public class LoginServiceHandler implements ServiceHandler {
     }
 
     @Override
-    public Response handle(Request request) {
+    public Response handle(Request request) throws BadRequestException {
         if (request.getMethod() != HttpMethod.POST) {
-            throw new RequestParsingException(request.getMethod().getMethod() + " 은 지원하지 않는 메서드입니다.");
+            throw new BadRequestException(request.getMethod().getMethod() + " 은 지원하지 않는 메서드입니다.");
         }
 
         Response response = new Response();

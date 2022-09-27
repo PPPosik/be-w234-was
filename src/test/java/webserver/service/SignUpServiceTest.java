@@ -1,6 +1,6 @@
 package webserver.service;
 
-import exception.UserNotValidException;
+import exception.UnauthorizedUserException;
 import exception.UserSaveException;
 import model.User;
 import org.junit.jupiter.api.BeforeAll;
@@ -84,6 +84,6 @@ class SignUpServiceTest {
 
     @Test
     void signUpInvlalidUserTest() {
-        assertThrows(UserNotValidException.class, () -> service.service(invalidUser));
+        assertThrows(UnauthorizedUserException.class, () -> service.service(invalidUser));
     }
 }
