@@ -45,7 +45,7 @@ class SignUpServiceTest {
     }
 
     @Test
-    void signUpTest() {
+    void signUpTest() throws UnauthorizedUserException {
         User savedUser = service.service(userInfo1);
         User generatedUser = generateUser(userInfo1);
 
@@ -53,7 +53,7 @@ class SignUpServiceTest {
     }
 
     @Test
-    void signUpManyUserTest() {
+    void signUpManyUserTest() throws UnauthorizedUserException {
         User savedUser1 = service.service(userInfo1);
         User generatedUser1 = generateUser(userInfo1);
 
@@ -75,7 +75,7 @@ class SignUpServiceTest {
     }
 
     @Test
-    void signUpDuplicatedUserTest() {
+    void signUpDuplicatedUserTest() throws UnauthorizedUserException {
         service.service(userInfo1);
 
         assertThrows(UserSaveException.class, () -> service.service(userInfo1));

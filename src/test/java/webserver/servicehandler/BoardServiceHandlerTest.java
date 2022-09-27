@@ -2,9 +2,9 @@ package webserver.servicehandler;
 
 import enums.HttpMethod;
 import enums.HttpStatusCode;
+import exception.BoardSaveException;
 import exception.http.BadRequestException;
 import exception.http.HttpException;
-import exception.http.PageNotFoundException;
 import exception.http.UnauthorizedUserException;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,7 +59,7 @@ public class BoardServiceHandlerTest {
     void saveBoardNotValidUserTest() {
         boardSaveRequest.addCookie("id", "user3");
 
-        assertThrows(UnauthorizedUserException.class, () -> handler.handle(boardSaveRequest));
+        assertThrows(BoardSaveException.class, () -> handler.handle(boardSaveRequest));
     }
 
     @Test
@@ -82,14 +82,14 @@ public class BoardServiceHandlerTest {
         Request request1 = new Request(HttpMethod.GET.getMethod(), "/board", "HTTP/1.1");
         Request request2 = new Request(HttpMethod.POST.getMethod(), "/board/list", "HTTP/1.1");
 
-        assertThrows(PageNotFoundException.class, () -> handler.handle(request1));
-        assertThrows(PageNotFoundException.class, () -> handler.handle(request2));
+        assertThrows(BadRequestException.class, () -> handler.handle(request1));
+        assertThrows(BadRequestException.class, () -> handler.handle(request2));
     }
 
     @Test
     void noCookieTest() {
         Request request = new Request(HttpMethod.POST.getMethod(), "/board", "HTTP/1.1");
 
-        assertThrows(BadRequestException.class, () -> handler.handle(request));
+        assertThrows(UnauthorizedUserException.class, () -> handler.handle(request));
     }
 }

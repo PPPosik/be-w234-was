@@ -1,6 +1,7 @@
 package webserver.servicehandler;
 
 import enums.HttpStatusCode;
+import exception.http.HttpException;
 import exception.http.RequestParsingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,7 +56,7 @@ class SignUpServiceHandlerTest {
     }
 
     @Test
-    void getHandleTest() {
+    void getHandleTest() throws HttpException {
         Response response = handler.handle(getRequest);
 
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.FOUND);
@@ -63,7 +64,7 @@ class SignUpServiceHandlerTest {
     }
 
     @Test
-    void postHandleTest() {
+    void postHandleTest() throws HttpException {
         Response response = handler.handle(postRequest);
 
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.FOUND);

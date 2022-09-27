@@ -1,7 +1,7 @@
 package webserver.servicehandler;
 
 import enums.HttpStatusCode;
-import exception.http.RequestParsingException;
+import exception.http.BadRequestException;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,11 +64,11 @@ class LoginServiceHandlerTest {
 
     @Test
     void getLoginFailTest() {
-        assertThrows(RequestParsingException.class, () -> handler.handle(getRequest));
+        assertThrows(BadRequestException.class, () -> handler.handle(getRequest));
     }
 
     @Test
-    void loginTest() {
+    void loginTest() throws BadRequestException {
         Response response = handler.handle(loginSuccessRequest);
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.FOUND);
         assertThat(response.getHeaders().get("Location")).isEqualTo(LOGIN_SUCCESS_PAGE);
@@ -77,7 +77,7 @@ class LoginServiceHandlerTest {
     }
 
     @Test
-    void loginFailTest() {
+    void loginFailTest() throws BadRequestException {
         Response response = handler.handle(loginFailRequest);
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.FOUND);
         assertThat(response.getHeaders().get("Location")).isEqualTo(LOGIN_FAIL_PAGE);

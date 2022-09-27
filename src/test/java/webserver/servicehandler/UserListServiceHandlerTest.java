@@ -2,6 +2,7 @@ package webserver.servicehandler;
 
 import enums.HttpStatusCode;
 import enums.Mime;
+import exception.http.HttpException;
 import exception.http.NotAcceptableException;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,7 +71,7 @@ class UserListServiceHandlerTest {
     }
 
     @Test
-    void successTest() {
+    void successTest() throws HttpException {
         Response response = handler.handle(successRequest);
 
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.OK);
@@ -79,7 +80,7 @@ class UserListServiceHandlerTest {
     }
 
     @Test
-    void noCookieTest() {
+    void noCookieTest() throws HttpException {
         Response response = handler.handle(noCookieRequest);
 
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.FOUND);
@@ -87,7 +88,7 @@ class UserListServiceHandlerTest {
     }
 
     @Test
-    void loginFalseTest() {
+    void loginFalseTest() throws HttpException {
         Response response = handler.handle(loginFalseRequest);
 
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.FOUND);
