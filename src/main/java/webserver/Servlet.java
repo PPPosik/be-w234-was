@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import enums.HttpStatusCode;
 import util.Request;
 import util.Response;
-import webserver.servicehandler.ServiceHandlerMapper;
+import webserver.servicehandler.mapper.ServiceHandlerMapper;
 
 public class Servlet {
     private static final Logger logger = LoggerFactory.getLogger(Servlet.class);

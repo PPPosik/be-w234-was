@@ -1,10 +1,11 @@
-package webserver.servicehandler;
+package webserver.servicehandler.mapper;
 
 import webserver.repository.BoardMySQLRepository;
 import webserver.repository.BoardRepository;
 import webserver.repository.UserMemoryRepository;
 import webserver.repository.UserRepository;
 import webserver.service.*;
+import webserver.servicehandler.*;
 
 import java.util.HashMap;
 import java.util.Map;
