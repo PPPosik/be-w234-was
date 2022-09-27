@@ -1,6 +1,7 @@
 package model;
 
 import org.junit.jupiter.api.Test;
+import util.UserValidator;
 
 import java.util.ArrayList;
 import java.util.List;

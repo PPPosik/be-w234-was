@@ -3,7 +3,7 @@ package webserver.service;
 import exception.http.UnauthorizedUserException;
 import exception.UserSaveException;
 import model.User;
-import model.UserValidator;
+import util.UserValidator;
 import webserver.repository.UserRepository;
 
 import java.util.Map;
