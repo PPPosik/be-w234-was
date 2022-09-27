@@ -1,5 +1,6 @@
-package model;
+package util;
 
+import model.User;
 import org.junit.jupiter.api.Test;
 import util.UserValidator;
 
