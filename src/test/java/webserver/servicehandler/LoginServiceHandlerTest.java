@@ -73,6 +73,7 @@ class LoginServiceHandlerTest {
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.FOUND);
         assertThat(response.getHeaders().get("Location")).isEqualTo(LOGIN_SUCCESS_PAGE);
         assertThat(response.getCookie().get("logined")).isEqualTo("true");
+        assertThat(response.getCookie().get("id")).isEqualTo("user1");
     }
 
     @Test

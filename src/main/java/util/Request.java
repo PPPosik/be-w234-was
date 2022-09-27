@@ -15,7 +15,7 @@ public class Request {
     private final Map<String, String> body = new HashMap<>();
     private final Cookie cookie = new Cookie();
 
-    Request(String method, String path, String version) {
+    public Request(String method, String path, String version) {
         this.method = HttpMethod.getByMethod(method);
         this.path = path;
         this.version = version;

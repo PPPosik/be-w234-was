@@ -1,5 +1,6 @@
 package webserver;
 
+import exception.BoardSaveException;
 import exception.NotAcceptableException;
 import exception.UserNotValidException;
 import exception.UserSaveException;
@@ -15,9 +16,10 @@ public class Servlet {
     private static final Logger logger = LoggerFactory.getLogger(Servlet.class);
 
     public Response service(Request request) {
+        // TODO exception 계층 만들기
         try {
             return ServiceHandlerMapper.getHandler(request.getPath()).handle(request);
-        } catch (UserSaveException | UserNotValidException e) {
+        } catch (UserSaveException | UserNotValidException | BoardSaveException e) {
             logger.error(e.toString());
             return generateErrorResponse(HttpStatusCode.BAD_REQUEST, e);
         } catch (NotAcceptableException e) {

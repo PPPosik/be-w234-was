@@ -23,7 +23,8 @@ public class RequestParser {
 
     public Request parse() {
         if (request == null) {
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(in, Charsets.UTF_8))) {
+            try {
+                BufferedReader br = new BufferedReader(new InputStreamReader(in, Charsets.UTF_8));
                 String requestLine = br.readLine();
                 parseRequestLine(requestLine);
                 parseHeaders(br);
