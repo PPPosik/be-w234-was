@@ -4,8 +4,8 @@ import exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import enums.HttpStatusCode;
-import util.Request;
-import util.Response;
+import util.http.Request;
+import util.http.Response;
 import webserver.servicehandler.mapper.ServiceHandlerMapper;
 
 public class Servlet {

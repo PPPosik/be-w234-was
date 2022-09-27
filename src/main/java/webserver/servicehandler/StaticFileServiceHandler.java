@@ -3,7 +3,8 @@ package webserver.servicehandler;
 import enums.HttpStatusCode;
 import enums.Mime;
 import exception.HttpException;
-import util.*;
+import util.http.Request;
+import util.http.Response;
 import webserver.service.StaticFileService;
 
 public class StaticFileServiceHandler implements ServiceHandler {

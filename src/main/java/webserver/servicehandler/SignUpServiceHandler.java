@@ -6,7 +6,8 @@ import enums.Mime;
 import exception.HttpException;
 import exception.RequestParsingException;
 import exception.UnauthorizedUserException;
-import util.*;
+import util.http.Request;
+import util.http.Response;
 import webserver.service.SignUpService;
 
 import java.util.Map;

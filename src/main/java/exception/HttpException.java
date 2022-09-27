@@ -2,7 +2,7 @@ package exception;
 
 import enums.HttpStatusCode;
 import enums.Mime;
-import util.Response;
+import util.http.Response;
 
 public class HttpException extends Exception {
     private HttpStatusCode httpStatusCode;

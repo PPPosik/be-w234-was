@@ -4,9 +4,9 @@ import enums.HttpMethod;
 import enums.HttpStatusCode;
 import enums.Mime;
 import exception.BadRequestException;
-import util.Cookie;
-import util.Request;
-import util.Response;
+import util.http.Cookie;
+import util.http.Request;
+import util.http.Response;
 import webserver.service.LoginService;
 
 public class LoginServiceHandler implements ServiceHandler {

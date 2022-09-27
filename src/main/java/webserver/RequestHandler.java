@@ -6,10 +6,10 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.Request;
-import util.RequestParser;
-import util.Response;
-import util.ResponseSender;
+import util.http.Request;
+import util.http.RequestParser;
+import util.http.Response;
+import util.http.ResponseSender;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);

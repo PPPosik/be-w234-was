@@ -5,9 +5,9 @@ import enums.HttpStatusCode;
 import enums.Mime;
 import exception.*;
 import model.Board;
-import util.Cookie;
-import util.Request;
-import util.Response;
+import util.http.Cookie;
+import util.http.Request;
+import util.http.Response;
 import webserver.service.BoardService;
 
 import java.util.List;

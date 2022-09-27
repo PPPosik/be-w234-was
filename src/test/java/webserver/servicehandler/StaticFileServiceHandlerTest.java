@@ -4,9 +4,9 @@ import enums.HttpStatusCode;
 import enums.Mime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import util.Request;
-import util.RequestParser;
-import util.Response;
+import util.http.Request;
+import util.http.RequestParser;
+import util.http.Response;
 import webserver.service.StaticFileService;
 
 import java.io.ByteArrayInputStream;

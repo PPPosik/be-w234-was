@@ -4,8 +4,8 @@ import enums.HttpStatusCode;
 import enums.Mime;
 import exception.HttpException;
 import model.User;
-import util.Request;
-import util.Response;
+import util.http.Request;
+import util.http.Response;
 import util.htmlbuilder.UserListHtmlBuilder;
 import webserver.service.UserListService;
 
