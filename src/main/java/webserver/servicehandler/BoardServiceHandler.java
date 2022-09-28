@@ -7,6 +7,7 @@ import exception.http.BadRequestException;
 import exception.http.HttpException;
 import exception.http.UnauthorizedUserException;
 import model.Board;
+import util.AuthValidator;
 import util.http.Cookie;
 import util.http.Request;
 import util.http.Response;
@@ -35,7 +36,7 @@ public class BoardServiceHandler implements ServiceHandler {
     }
 
     private Response saveBoard(Request request) throws UnauthorizedUserException {
-        if (canWriteBoard(request.getCookie())) {
+        if (AuthValidator.canWriteBoard(request.getCookie())) {
             boardService.saveBoard(request.getCookie().get("id"), request.getBody().get("content"));
         } else {
             throw new UnauthorizedUserException("로그인한 사용자만 게시글을 작성할 수 있습니다.");
@@ -45,10 +46,6 @@ public class BoardServiceHandler implements ServiceHandler {
                 .setHttpStatusCode(HttpStatusCode.CREATED)
                 .setHeader("Content-Type", Mime.NONE.getMime() + ";charset=utf-8")
                 .setBody("게시글 작성에 성공했습니다.");
-    }
-
-    private boolean canWriteBoard(Cookie cookie) {
-        return cookie != null && "true".equals(cookie.get("logined"));
     }
 
     private Response getBoardList(Request request) {
