@@ -1,5 +1,6 @@
 package webserver.servicehandler;
 
+import enums.HttpMethod;
 import enums.HttpStatusCode;
 import exception.http.HttpException;
 import exception.http.RequestParsingException;
@@ -27,32 +28,25 @@ class SignUpServiceHandlerTest {
     Request getRequest, postRequest, errRequest;
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    void beforeEach() {
         repository.clear();
 
-        getRequest = new RequestParser(
-                    new ByteArrayInputStream((
-                        "GET /user/create?userId=2&password=1&name=1&email=1@1 HTTP/1.1\n" +
-                        "Host: localhost:8080\n" +
-                        "Connection: keep-alive\n" +
-                        "Accept: */*").getBytes())).parse();
+        getRequest = new Request(HttpMethod.GET.getMethod(), "/user/create", "HTTP/1.1");
+        getRequest.addHeader("accept", "text/html");
+        getRequest.addParam("userId", "1");
+        getRequest.addParam("password", "1");
+        getRequest.addParam("name", "1");
+        getRequest.addParam("email", "1@1");
 
-        postRequest = new RequestParser(
-                    new ByteArrayInputStream((
-                        "POST /user/create HTTP/1.1\n" +
-                        "Host: localhost:8080\n" +
-                        "Connection: keep-alive\n" +
-                        "Content-Length: 36\n" +
-                        "Content-Type: application/x-www-form-urlencoded\n" +
-                        "Accept: */*\n\n" +
-                        "userId=2&password=1&name=1&email=1@1").getBytes())).parse();
+        postRequest = new Request(HttpMethod.POST.getMethod(), "/user/create", "HTTP/1.1");
+        postRequest.addHeader("accept", "text/html");
+        postRequest.addBody("userId", "2");
+        postRequest.addBody("password", "2");
+        postRequest.addBody("name", "2");
+        postRequest.addBody("email", "2@2");
 
-        errRequest = new RequestParser(
-                    new ByteArrayInputStream((
-                        "PATCH /user/create?userId=2&password=1&name=1&email=1@1 HTTP/1.1\n" +
-                        "Host: localhost:8080\n" +
-                        "Connection: keep-alive\n" +
-                        "Accept: */*").getBytes())).parse();
+        errRequest = new Request(HttpMethod.PATCH.getMethod(), "/user/create", "HTTP/1.1");
+        errRequest.addHeader("accept", "text/html");
     }
 
     @Test

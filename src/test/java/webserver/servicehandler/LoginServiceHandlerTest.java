@@ -1,18 +1,16 @@
 package webserver.servicehandler;
 
+import enums.HttpMethod;
 import enums.HttpStatusCode;
 import exception.http.BadRequestException;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.http.Request;
-import util.http.RequestParser;
 import util.http.Response;
 import webserver.repository.UserMemoryRepository;
 import webserver.repository.UserRepository;
 import webserver.service.LoginService;
-
-import java.io.ByteArrayInputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,33 +28,21 @@ class LoginServiceHandlerTest {
     private final User user = new User("user1", "password1", "name1", "user1@abc.com");
 
     @BeforeEach
-    void beforeEach() throws Exception {
-        getRequest = new RequestParser(
-                new ByteArrayInputStream((
-                        "GET /user/login?userId=user1&password=password1 HTTP/1.1\n" +
-                        "Host: localhost:8080\n" +
-                        "Connection: keep-alive\n" +
-                        "Accept: */*").getBytes())).parse();
+    void beforeEach() {
+        getRequest = new Request(HttpMethod.GET.getMethod(), "/user/login", "HTTP/1.1");
+        getRequest.addHeader("accept", "text/html");
+        getRequest.addParam("userId", "user1");
+        getRequest.addParam("password", "password1");
 
-        loginSuccessRequest = new RequestParser(
-                new ByteArrayInputStream((
-                        "POST /user/login HTTP/1.1\n" +
-                        "Host: localhost:8080\n" +
-                        "Connection: keep-alive\n" +
-                        "Content-Length: 31\n" +
-                        "Content-Type: application/x-www-form-urlencoded\n" +
-                        "Accept: */*\n\n" +
-                        "userId=user1&password=password1").getBytes())).parse();
+        loginSuccessRequest = new Request(HttpMethod.POST.getMethod(), "/user/login", "HTTP/1.1");
+        loginSuccessRequest.addHeader("accept", "text/html");
+        loginSuccessRequest.addBody("userId", "user1");
+        loginSuccessRequest.addBody("password", "password1");
 
-        loginFailRequest = new RequestParser(
-                new ByteArrayInputStream((
-                        "POST /user/login HTTP/1.1\n" +
-                        "Host: localhost:8080\n" +
-                        "Connection: keep-alive\n" +
-                        "Content-Length: 31\n" +
-                        "Content-Type: application/x-www-form-urlencoded\n" +
-                        "Accept: */*\n\n" +
-                        "userId=user2&password=password2").getBytes())).parse();
+        loginFailRequest = new Request(HttpMethod.POST.getMethod(), "/user/login", "HTTP/1.1");
+        loginFailRequest.addHeader("accept", "text/html");
+        loginFailRequest.addBody("userId", "user2");
+        loginFailRequest.addBody("password", "password2");
 
         repository.clear();
         repository.save(user);

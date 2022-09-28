@@ -32,8 +32,6 @@ public class BoardMySQLRepository implements BoardRepository {
         } catch (Exception e) {
             tx.rollback();
             throw new BoardSaveException(e.getMessage());
-        } finally {
-            em.close();
         }
     }
 

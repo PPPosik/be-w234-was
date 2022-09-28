@@ -1,5 +1,6 @@
 package webserver.servicehandler;
 
+import enums.HttpMethod;
 import enums.HttpStatusCode;
 import enums.Mime;
 import exception.http.HttpException;
@@ -24,27 +25,15 @@ class StaticFileServiceHandlerTest {
     Request htmlRequest, cssRequest, errRequest;
 
     @BeforeEach
-    void beforeEach() throws Exception {
-        htmlRequest = new RequestParser(
-                new ByteArrayInputStream((
-                        "GET /index.html HTTP/1.1\n" +
-                        "Host: localhost:8080\n" +
-                        "Connection: keep-alive\n" +
-                        "Accept: text/html, */*").getBytes())).parse();
+    void beforeEach() {
+        htmlRequest = new Request(HttpMethod.GET.getMethod(), "/index.html", "HTTP/1.1");
+        htmlRequest.addHeader("accept", "text/html");
 
-        cssRequest = new RequestParser(
-                new ByteArrayInputStream((
-                        "GET /css/styles.css HTTP/1.1\n" +
-                        "Host: localhost:8080\n" +
-                        "Connection: keep-alive\n" +
-                        "Accept: */*, text/css").getBytes())).parse();
+        cssRequest = new Request(HttpMethod.GET.getMethod(), "/css/styles.css", "HTTP/1.1");
+        cssRequest.addHeader("accept", "text/css");
 
-        errRequest = new RequestParser(
-                new ByteArrayInputStream((
-                        "GET /not.found HTTP/1.1\n" +
-                        "Host: localhost:8080\n" +
-                        "Connection: keep-alive\n" +
-                        "Accept: */*").getBytes())).parse();
+        errRequest = new Request(HttpMethod.GET.getMethod(), "/not.found", "HTTP/1.1");
+        errRequest.addHeader("accept", "text/html");
     }
 
     @Test

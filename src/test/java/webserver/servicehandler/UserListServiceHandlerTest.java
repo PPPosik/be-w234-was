@@ -1,5 +1,6 @@
 package webserver.servicehandler;
 
+import enums.HttpMethod;
 import enums.HttpStatusCode;
 import enums.Mime;
 import exception.http.HttpException;
@@ -32,42 +33,26 @@ class UserListServiceHandlerTest {
     Request successRequest, noCookieRequest, loginFalseRequest, notAcceptableRequest;
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    void beforeEach() {
         repository.clear();
 
         repository.save(user1);
         repository.save(user2);
 
-        successRequest = new RequestParser(
-                new ByteArrayInputStream((
-                        "GET /user/list HTTP/1.1\n" +
-                        "Host: localhost:8080\n" +
-                        "Connection: keep-alive\n" +
-                        "Accept: text/html, text/plain, */*\n" +
-                        "Cookie: logined=true;").getBytes())).parse();
+        successRequest = new Request(HttpMethod.GET.getMethod(), "/user/list", "HTTP/1.1");
+        successRequest.addHeader("accept", "text/html");
+        successRequest.addCookie("logined", "true");
 
-        noCookieRequest = new RequestParser(
-                new ByteArrayInputStream((
-                        "GET /user/list HTTP/1.1\n" +
-                        "Host: localhost:8080\n" +
-                        "Connection: keep-alive\n" +
-                        "Accept: text/html, text/plain, */*").getBytes())).parse();
+        noCookieRequest = new Request(HttpMethod.GET.getMethod(), "/user/list", "HTTP/1.1");
+        noCookieRequest.addHeader("accept", "text/html");
 
-        loginFalseRequest = new RequestParser(
-                new ByteArrayInputStream((
-                        "GET /user/list HTTP/1.1\n" +
-                        "Host: localhost:8080\n" +
-                        "Connection: keep-alive\n" +
-                        "Accept: text/html, */*\n" +
-                        "Cookie: logined=false;").getBytes())).parse();
+        loginFalseRequest = new Request(HttpMethod.GET.getMethod(), "/user/list", "HTTP/1.1");
+        loginFalseRequest.addHeader("accept", "text/html");
+        loginFalseRequest.addCookie("logined", "false");
 
-        notAcceptableRequest = new RequestParser(
-                new ByteArrayInputStream((
-                        "GET /user/list HTTP/1.1\n" +
-                        "Host: localhost:8080\n" +
-                        "Connection: keep-alive\n" +
-                        "Accept: text/css\n" +
-                        "Cookie: logined=true;").getBytes())).parse();
+        notAcceptableRequest = new Request(HttpMethod.GET.getMethod(), "/user/list", "HTTP/1.1");
+        notAcceptableRequest.addHeader("accept", "text/css");
+        notAcceptableRequest.addCookie("logined", "true");
     }
 
     @Test
