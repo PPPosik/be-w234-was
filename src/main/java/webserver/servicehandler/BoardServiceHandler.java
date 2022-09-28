@@ -15,10 +15,10 @@ import webserver.service.BoardService;
 import java.util.List;
 
 public class BoardServiceHandler implements ServiceHandler {
-    private final BoardService service;
+    private final BoardService boardService;
 
     public BoardServiceHandler(BoardService boardService) {
-        this.service = boardService;
+        this.boardService = boardService;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class BoardServiceHandler implements ServiceHandler {
 
     private Response saveBoard(Request request) throws UnauthorizedUserException {
         if (canWriteBoard(request.getCookie())) {
-            service.saveBoard(request.getCookie().get("id"), request.getBody().get("content"));
+            boardService.saveBoard(request.getCookie().get("id"), request.getBody().get("content"));
         } else {
             throw new UnauthorizedUserException("로그인한 사용자만 게시글을 작성할 수 있습니다.");
         }
@@ -52,7 +52,7 @@ public class BoardServiceHandler implements ServiceHandler {
     }
 
     private Response getBoardList(Request request) {
-        List<Board> boardList = service.getBoardList();
+        List<Board> boardList = boardService.getBoardList();
 
         return new Response()
                 .setHttpStatusCode(HttpStatusCode.OK)
