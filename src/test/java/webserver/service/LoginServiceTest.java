@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class LoginServiceTest {
     private final UserRepository repository = new UserMemoryRepository();
-    private final UserService service = new UserService(repository);
+    private final LoginService service = new LoginService(repository);
 
     private final User user1 = new User("user1", "password1", "name1", "user1@abc.com");
     private final User user2 = new User("user2", "password2", "name2", "user2@abc.com");

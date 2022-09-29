@@ -1,22 +1,26 @@
 package webserver.service;
 
-import constant.LocalConst;
-import exception.http.RequestParsingException;
-
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 
 public class StaticFileService {
-    public byte[] serviceStaticFile(File file) throws RequestParsingException {
-        try {
+    private final String RESOURCE_DIR = "webapp";
+
+    public byte[] serviceDefault() {
+        return "Hello World".getBytes();
+    }
+
+    public byte[] serviceStaticFile(String path) throws Exception {
+        File file = new File(getResourcePath(path));
+
+        if (file.exists()) {
             return Files.readAllBytes(file.toPath());
-        } catch (IOException e) {
-            throw new RequestParsingException("파일 읽기에 실패했습니다.");
+        } else {
+            throw new IllegalArgumentException("파일을 찾을 수 없습니다.");
         }
     }
 
-    public String getResourcePath(String path) {
-        return LocalConst.RESOURCE_DIR + path;
+    private String getResourcePath(String path) {
+        return RESOURCE_DIR + path;
     }
 }

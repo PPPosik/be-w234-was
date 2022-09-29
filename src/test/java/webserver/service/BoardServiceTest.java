@@ -1,6 +1,6 @@
 package webserver.service;
 
-import exception.BoardSaveException;
+import exception.UserNotValidException;
 import model.Board;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +49,7 @@ class BoardServiceTest {
 
     @Test
     void saveBoardNotValidUserTest() {
-        assertThrows(BoardSaveException.class, () -> service.saveBoard("user3", "user3_content"));
+        assertThrows(UserNotValidException.class, () -> service.saveBoard("user3", "user3_content"));
     }
 
     @Test

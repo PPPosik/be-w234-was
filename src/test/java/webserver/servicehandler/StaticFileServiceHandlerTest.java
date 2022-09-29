@@ -1,23 +1,17 @@
 package webserver.servicehandler;
 
-import constant.LocalConst;
-import enums.HttpMethod;
 import enums.HttpStatusCode;
 import enums.Mime;
-import exception.http.HttpException;
-import exception.http.PageNotFoundException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import util.http.Request;
-import util.http.RequestParser;
-import util.http.Response;
+import util.Request;
+import util.RequestParser;
+import util.Response;
 import webserver.service.StaticFileService;
 
 import java.io.ByteArrayInputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class StaticFileServiceHandlerTest {
     final StaticFileService service = new StaticFileService();
@@ -26,19 +20,31 @@ class StaticFileServiceHandlerTest {
     Request htmlRequest, cssRequest, errRequest;
 
     @BeforeEach
-    void beforeEach() {
-        htmlRequest = new Request(HttpMethod.GET.getMethod(), LocalConst.HOME_PAGE_PATH, "HTTP/1.1");
-        htmlRequest.addHeader("accept", "text/html");
+    void beforeEach() throws Exception {
+        htmlRequest = new RequestParser(
+                new ByteArrayInputStream((
+                        "GET /index.html HTTP/1.1\n" +
+                        "Host: localhost:8080\n" +
+                        "Connection: keep-alive\n" +
+                        "Accept: text/html, */*").getBytes())).parse();
 
-        cssRequest = new Request(HttpMethod.GET.getMethod(), "/css/styles.css", "HTTP/1.1");
-        cssRequest.addHeader("accept", "text/css");
+        cssRequest = new RequestParser(
+                new ByteArrayInputStream((
+                        "GET /css/styles.css HTTP/1.1\n" +
+                        "Host: localhost:8080\n" +
+                        "Connection: keep-alive\n" +
+                        "Accept: */*, text/css").getBytes())).parse();
 
-        errRequest = new Request(HttpMethod.GET.getMethod(), "/not.found", "HTTP/1.1");
-        errRequest.addHeader("accept", "text/html");
+        errRequest = new RequestParser(
+                new ByteArrayInputStream((
+                        "GET /not.found HTTP/1.1\n" +
+                        "Host: localhost:8080\n" +
+                        "Connection: keep-alive\n" +
+                        "Accept: */*").getBytes())).parse();
     }
 
     @Test
-    void htmlHandle() throws HttpException {
+    void htmlHandle() {
         Response response = handler.handle(htmlRequest);
 
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.OK);
@@ -46,7 +52,7 @@ class StaticFileServiceHandlerTest {
     }
 
     @Test
-    void cssHandle() throws HttpException {
+    void cssHandle() {
         Response response = handler.handle(cssRequest);
 
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.OK);
@@ -55,6 +61,7 @@ class StaticFileServiceHandlerTest {
 
     @Test
     void errorHandle() {
-        assertThrows(PageNotFoundException.class, () -> handler.handle(errRequest));
+        Response response = handler.handle(errRequest);
+        assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.NOT_FOUND);
     }
 }

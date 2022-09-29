@@ -3,6 +3,7 @@ package webserver;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import exception.RequestParsingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,8 +26,12 @@ public class WebServer {
             // 클라이언트가 연결될때까지 대기한다.
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                Thread thread = new Thread(new RequestHandler(connection));
-                thread.start();
+                try {
+                    Thread thread = new Thread(new RequestHandler(connection));
+                    thread.start();
+                } catch (RequestParsingException e) {
+                    logger.error(e.getMessage());
+                }
             }
         }
     }

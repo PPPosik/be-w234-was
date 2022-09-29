@@ -1,6 +1,6 @@
 package enums;
 
-import exception.http.NotAcceptableException;
+import exception.NotAcceptableException;
 
 public enum Mime {
     HTML("html", "text/html"),
@@ -53,7 +53,7 @@ public enum Mime {
         return NONE.getMime();
     }
 
-    public static Mime canAcceptHtml(String accept) throws NotAcceptableException {
+    public static Mime canAcceptHtml(String accept) {
         if (accept.contains(Mime.HTML.getMime())) {
             return Mime.HTML;
         } else {
