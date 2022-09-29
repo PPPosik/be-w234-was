@@ -17,7 +17,7 @@ public class HttpException extends Exception {
     public Response generateErrorResponse() {
         return new Response()
                 .setHttpStatusCode(httpStatusCode)
-                .setHeader("Content-Type", Mime.NONE.getMime()+";charset=utf-8")
+                .setContentType(Mime.NONE)
                 .setBody(message);
     }
 }
