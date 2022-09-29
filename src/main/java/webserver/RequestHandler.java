@@ -4,13 +4,13 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Map;
 
-import exception.RequestParsingException;
+import com.google.common.base.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.Request;
-import util.RequestParser;
-import util.Response;
-import util.ResponseSender;
+import util.http.Request;
+import util.http.RequestParser;
+import util.http.Response;
+import util.http.ResponseSender;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
@@ -24,18 +24,14 @@ public class RequestHandler implements Runnable {
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
         this.servlet = new Servlet();
-
-        try {
-            this.requestParser = new RequestParser(connection.getInputStream());
-        } catch (Exception e) {
-            throw new RequestParsingException("잘못된 요청이 발생했습니다.");
-        }
     }
 
     public void run() {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
 
-        try (DataOutputStream out = new DataOutputStream(connection.getOutputStream())) {
+        try (DataOutputStream out = new DataOutputStream(connection.getOutputStream());
+             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), Charsets.UTF_8))) {
+            this.requestParser = new RequestParser(br);
             this.request = requestParser.parse();
             this.response = generateResponse();
 

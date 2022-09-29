@@ -1,77 +1,70 @@
 package webserver.servicehandler;
 
+import constant.LocalConst;
+import enums.HttpMethod;
 import enums.HttpStatusCode;
-import exception.RequestParsingException;
+import exception.http.BadRequestException;
+import exception.http.HttpException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import util.Request;
-import util.RequestParser;
-import util.Response;
+import util.http.Request;
+import util.http.Response;
 import webserver.repository.UserMemoryRepository;
 import webserver.repository.UserRepository;
-import webserver.service.SignUpService;
+import webserver.service.UserService;
 
-import java.io.ByteArrayInputStream;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SignUpServiceHandlerTest {
-    final String REDIRECT_PAGE = "http://localhost:8080/index.html";
     final UserRepository repository = new UserMemoryRepository();
-    final SignUpService service = new SignUpService(repository);
-    final SignUpServiceHandler handler = new SignUpServiceHandler(service);
+    final UserService service = new UserService(repository);
+    final UserServiceHandler handler = new UserServiceHandler(service);
 
     Request getRequest, postRequest, errRequest;
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    void beforeEach() {
         repository.clear();
 
-        getRequest = new RequestParser(
-                    new ByteArrayInputStream((
-                        "GET /user/create?userId=2&password=1&name=1&email=1@1 HTTP/1.1\n" +
-                        "Host: localhost:8080\n" +
-                        "Connection: keep-alive\n" +
-                        "Accept: */*").getBytes())).parse();
+        getRequest = new Request(HttpMethod.GET.getMethod(), "/user/create", "HTTP/1.1");
+        getRequest.addHeader("accept", "text/html");
+        getRequest.addParam("userId", "1");
+        getRequest.addParam("password", "1");
+        getRequest.addParam("name", "1");
+        getRequest.addParam("email", "1@1");
 
-        postRequest = new RequestParser(
-                    new ByteArrayInputStream((
-                        "POST /user/create HTTP/1.1\n" +
-                        "Host: localhost:8080\n" +
-                        "Connection: keep-alive\n" +
-                        "Content-Length: 36\n" +
-                        "Content-Type: application/x-www-form-urlencoded\n" +
-                        "Accept: */*\n\n" +
-                        "userId=2&password=1&name=1&email=1@1").getBytes())).parse();
+        postRequest = new Request(HttpMethod.POST.getMethod(), "/user/create", "HTTP/1.1");
+        postRequest.addHeader("accept", "text/html");
+        postRequest.addBody("userId", "2");
+        postRequest.addBody("password", "2");
+        postRequest.addBody("name", "2");
+        postRequest.addBody("email", "2@2");
 
-        errRequest = new RequestParser(
-                    new ByteArrayInputStream((
-                        "PATCH /user/create?userId=2&password=1&name=1&email=1@1 HTTP/1.1\n" +
-                        "Host: localhost:8080\n" +
-                        "Connection: keep-alive\n" +
-                        "Accept: */*").getBytes())).parse();
+        errRequest = new Request(HttpMethod.PATCH.getMethod(), "/user/create", "HTTP/1.1");
+        errRequest.addHeader("accept", "text/html");
     }
 
     @Test
-    void getHandleTest() {
+    void getHandleTest() throws HttpException {
         Response response = handler.handle(getRequest);
 
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.FOUND);
-        assertThat(response.getHeaders()).contains(Map.entry("Location", REDIRECT_PAGE));
+        assertThat(response.getHeaders()).contains(Map.entry("Location", LocalConst.HOME_PAGE_URL));
     }
 
     @Test
-    void postHandleTest() {
+    void postHandleTest() throws HttpException {
         Response response = handler.handle(postRequest);
 
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.FOUND);
-        assertThat(response.getHeaders()).contains(Map.entry("Location", REDIRECT_PAGE));
+        assertThat(response.getHeaders()).contains(Map.entry("Location", LocalConst.HOME_PAGE_URL));
     }
 
     @Test
     void errorHandleTest() {
-        assertThrows(RequestParsingException.class, () -> handler.handle(errRequest));
+        assertThrows(BadRequestException.class, () -> handler.handle(errRequest));
     }
 }
