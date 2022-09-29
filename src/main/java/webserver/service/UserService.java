@@ -1,21 +1,24 @@
 package webserver.service;
 
-import exception.http.UnauthorizedUserException;
 import exception.UserSaveException;
+import exception.http.UnauthorizedUserException;
 import model.User;
+import util.AuthValidator;
 import util.UserValidator;
 import webserver.repository.UserRepository;
 
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class SignUpService {
+public class UserService {
     private final UserRepository userRepository;
 
-    public SignUpService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public User service(Map<String, String> userInfo) throws UnauthorizedUserException {
+    public User saveUser(Map<String, String> userInfo) throws UnauthorizedUserException {
         User user = generateUser(userInfo);
 
         if (UserValidator.isNotValidUser(user)) {
@@ -23,6 +26,16 @@ public class SignUpService {
         }
 
         return userRepository.save(user).orElseThrow(() -> new UserSaveException(user + " 유저 정보 저장에 실패했습니다."));
+    }
+
+    public boolean login(String userId, String password) {
+        AtomicBoolean ret = new AtomicBoolean(false);
+        userRepository.findByUserId(userId).ifPresent(user -> ret.set(AuthValidator.canLogin(user, userId, password)));
+        return ret.get();
+    }
+
+    public List<User> getUserList() {
+        return userRepository.findAll().orElse(List.of());
     }
 
     private User generateUser(Map<String, String> userInfo) {

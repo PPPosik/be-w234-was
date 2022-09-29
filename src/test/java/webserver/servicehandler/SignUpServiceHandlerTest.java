@@ -2,18 +2,17 @@ package webserver.servicehandler;
 
 import enums.HttpMethod;
 import enums.HttpStatusCode;
+import exception.http.BadRequestException;
 import exception.http.HttpException;
 import exception.http.RequestParsingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.http.Request;
-import util.http.RequestParser;
 import util.http.Response;
 import webserver.repository.UserMemoryRepository;
 import webserver.repository.UserRepository;
-import webserver.service.SignUpService;
+import webserver.service.UserService;
 
-import java.io.ByteArrayInputStream;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,8 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class SignUpServiceHandlerTest {
     final String REDIRECT_PAGE = "http://localhost:8080/index.html";
     final UserRepository repository = new UserMemoryRepository();
-    final SignUpService service = new SignUpService(repository);
-    final SignUpServiceHandler handler = new SignUpServiceHandler(service);
+    final UserService service = new UserService(repository);
+    final UserServiceHandler handler = new UserServiceHandler(service);
 
     Request getRequest, postRequest, errRequest;
 
@@ -67,6 +66,6 @@ class SignUpServiceHandlerTest {
 
     @Test
     void errorHandleTest() {
-        assertThrows(RequestParsingException.class, () -> handler.handle(errRequest));
+        assertThrows(BadRequestException.class, () -> handler.handle(errRequest));
     }
 }

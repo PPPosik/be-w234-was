@@ -17,9 +17,7 @@ public class ServiceHandlerMapper {
     private static final BoardRepository boardRepository;
 
     private static final StaticFileService staticFileService;
-    private static final SignUpService signUpService;
-    private static final LoginService loginService;
-    private static final UserListService userListService;
+    private static final UserService userSevice;
     private static final BoardService boardService;
 
     static {
@@ -29,16 +27,14 @@ public class ServiceHandlerMapper {
         boardRepository = new BoardMySQLRepository();
 
         staticFileService = new StaticFileService();
-        signUpService = new SignUpService(userRepository);
-        loginService = new LoginService(userRepository);
-        userListService = new UserListService(userRepository);
+        userSevice = new UserService(userRepository);
         boardService = new BoardService(userRepository, boardRepository);
 
         // TODO 정규식으로 path 관리
         handlers.put("/static", new StaticFileServiceHandler(staticFileService));
-        handlers.put("/user/create", new SignUpServiceHandler(signUpService));
-        handlers.put("/user/login", new LoginServiceHandler(loginService));
-        handlers.put("/user/list", new UserListServiceHandler(userListService));
+        handlers.put("/user/create", new UserServiceHandler(userSevice));
+        handlers.put("/user/login", new UserServiceHandler(userSevice));
+        handlers.put("/user/list", new UserServiceHandler(userSevice));
         handlers.put("/board", new BoardServiceHandler(boardService));
         handlers.put("/board/list", new BoardServiceHandler(boardService));
     }

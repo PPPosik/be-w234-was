@@ -3,6 +3,7 @@ package webserver.servicehandler;
 import enums.HttpMethod;
 import enums.HttpStatusCode;
 import exception.http.BadRequestException;
+import exception.http.HttpException;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,7 @@ import util.http.Request;
 import util.http.Response;
 import webserver.repository.UserMemoryRepository;
 import webserver.repository.UserRepository;
-import webserver.service.LoginService;
+import webserver.service.UserService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,8 +21,8 @@ class LoginServiceHandlerTest {
     private final String LOGIN_FAIL_PAGE = "http://localhost:8080/user/login_failed.html";
 
     private final UserRepository repository = new UserMemoryRepository();
-    private final LoginService service = new LoginService(repository);
-    private final LoginServiceHandler handler = new LoginServiceHandler(service);
+    private final UserService service = new UserService(repository);
+    private final UserServiceHandler handler = new UserServiceHandler(service);
 
     private Request getRequest, loginSuccessRequest, loginFailRequest;
 
@@ -54,7 +55,7 @@ class LoginServiceHandlerTest {
     }
 
     @Test
-    void loginTest() throws BadRequestException {
+    void loginTest() throws HttpException {
         Response response = handler.handle(loginSuccessRequest);
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.FOUND);
         assertThat(response.getHeaders().get("Location")).isEqualTo(LOGIN_SUCCESS_PAGE);
@@ -63,7 +64,7 @@ class LoginServiceHandlerTest {
     }
 
     @Test
-    void loginFailTest() throws BadRequestException {
+    void loginFailTest() throws HttpException {
         Response response = handler.handle(loginFailRequest);
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.FOUND);
         assertThat(response.getHeaders().get("Location")).isEqualTo(LOGIN_FAIL_PAGE);

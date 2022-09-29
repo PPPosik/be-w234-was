@@ -9,23 +9,20 @@ import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.http.Request;
-import util.http.RequestParser;
 import util.http.Response;
 import webserver.repository.UserMemoryRepository;
 import webserver.repository.UserRepository;
-import webserver.service.UserListService;
-
-import java.io.ByteArrayInputStream;
+import webserver.service.UserService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserListServiceHandlerTest {
-    private final String LOGIN_PAGE = "login.html";
+    private final String LOGIN_PAGE = "http://localhost:8080/user/login.html";
 
     private final UserRepository repository = new UserMemoryRepository();
-    private final UserListService service = new UserListService(repository);
-    private final UserListServiceHandler handler = new UserListServiceHandler(service);
+    private final UserService service = new UserService(repository);
+    private final UserServiceHandler handler = new UserServiceHandler(service);
 
     private final User user1 = new User("user1", "password1", "name1", "user1@abc.com");
     private final User user2 = new User("user2", "password2", "name2", "user2@abc.com");
