@@ -31,7 +31,7 @@ public class StaticFileServiceHandler implements ServiceHandler {
         return new Response()
                 .setHttpStatusCode(HttpStatusCode.OK)
                 .setHeader("Content-Length", String.valueOf(body.length))
-                .setHeader("Content-Type", Mime.getContentType(request.getPath(), request.getHeaders().get("accept")) + ";charset=utf-8")
+                .setContentType(request)
                 .setBody(body);
     }
 }

@@ -1,6 +1,7 @@
 package util.http;
 
 import enums.HttpStatusCode;
+import enums.Mime;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,6 +47,21 @@ public class Response {
 
     public Response setHeader(String name, String value) {
         this.headers.put(name, value);
+        return this;
+    }
+
+    public Response setRedirect(String url) {
+        this.headers.put("Location", url);
+        return this;
+    }
+
+    public Response setContentType(Request request) {
+        this.headers.put("Content-Type", Mime.getContentType(request.getPath(), request.getHeaders().get("accept")) + ";charset=utf-8");
+        return this;
+    }
+
+    public Response setContentType(Mime mime) {
+        this.headers.put("Content-Type", mime.getMime() + ";charset=utf-8");
         return this;
     }
 

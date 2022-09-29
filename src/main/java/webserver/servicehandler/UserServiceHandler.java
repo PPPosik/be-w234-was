@@ -46,9 +46,9 @@ public class UserServiceHandler implements ServiceHandler {
 
         boolean login = userService.login(request.getBody().get("userId"), request.getBody().get("password"));
         if (login) {
-            response.setHeader("Location", LocalConst.HOME_PAGE_URL);
+            response.setRedirect(LocalConst.HOME_PAGE_URL);
         } else {
-            response.setHeader("Location", LocalConst.LOGIN_FAIL_PAGE_URL);
+            response.setRedirect(LocalConst.LOGIN_FAIL_PAGE_URL);
         }
 
         cookie.put("logined", String.valueOf(login));
@@ -57,7 +57,7 @@ public class UserServiceHandler implements ServiceHandler {
 
         return response
                 .setHttpStatusCode(HttpStatusCode.FOUND)
-                .setHeader("Content-Type", Mime.getContentType(request.getPath(), request.getHeaders().get("accept")) + ";charset=utf-8")
+                .setContentType(request)
                 .setCookie(cookie);
     }
 
@@ -68,8 +68,8 @@ public class UserServiceHandler implements ServiceHandler {
 
         return response
                 .setHttpStatusCode(HttpStatusCode.FOUND)
-                .setHeader("Content-Type", Mime.getContentType(request.getPath(), request.getHeaders().get("accept")) + ";charset=utf-8")
-                .setHeader("Location", LocalConst.HOME_PAGE_URL);
+                .setContentType(request)
+                .setRedirect(LocalConst.HOME_PAGE_URL);
     }
 
     public Response saveUserPost(Request request) throws HttpException {
@@ -79,8 +79,8 @@ public class UserServiceHandler implements ServiceHandler {
 
         return response
                 .setHttpStatusCode(HttpStatusCode.FOUND)
-                .setHeader("Content-Type", Mime.getContentType(request.getPath(), request.getHeaders().get("accept")) + ";charset=utf-8")
-                .setHeader("Location", LocalConst.HOME_PAGE_URL);
+                .setContentType(request)
+                .setRedirect(LocalConst.HOME_PAGE_URL);
     }
 
     public Response getUserList(Request request) throws HttpException {
@@ -97,11 +97,11 @@ public class UserServiceHandler implements ServiceHandler {
                     .build();
 
             response.setHttpStatusCode(HttpStatusCode.OK)
-                    .setBody(body)
-                    .setHeader("Content-Type", mime.getMime() + ";charset=utf-8");
+                    .setContentType(mime)
+                    .setBody(body);
         } else {
             response.setHttpStatusCode(HttpStatusCode.FOUND)
-                    .setHeader("Location", LocalConst.LOGIN_PAGE_URL);
+                    .setRedirect(LocalConst.LOGIN_PAGE_URL);
         }
 
         return response;

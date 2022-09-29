@@ -43,7 +43,7 @@ public class BoardServiceHandler implements ServiceHandler {
 
         return new Response()
                 .setHttpStatusCode(HttpStatusCode.CREATED)
-                .setHeader("Content-Type", Mime.NONE.getMime() + ";charset=utf-8")
+                .setContentType(Mime.NONE)
                 .setBody("게시글 작성에 성공했습니다.");
     }
 
@@ -52,7 +52,7 @@ public class BoardServiceHandler implements ServiceHandler {
 
         return new Response()
                 .setHttpStatusCode(HttpStatusCode.OK)
-                .setHeader("Content-Type", Mime.NONE.getMime() + ";charset=utf-8")
+                .setContentType(Mime.NONE)
                 .setBody(generateBoardListBody(boardList));
     }
 
