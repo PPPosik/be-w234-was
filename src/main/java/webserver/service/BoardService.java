@@ -1,6 +1,6 @@
 package webserver.service;
 
-import exception.UserNotValidException;
+import exception.BoardSaveException;
 import model.Board;
 import model.User;
 import webserver.repository.BoardRepository;
@@ -18,7 +18,7 @@ public class BoardService {
     }
 
     public Board saveBoard(String userId, String content) {
-        User user = userRepository.findByUserId(userId).orElseThrow(() -> new UserNotValidException("존재하지 않는 유저입니다."));
+        User user = userRepository.findByUserId(userId).orElseThrow(() -> new BoardSaveException("존재하지 않는 유저입니다."));
         return boardRepository.save(new Board(user.getName(), content)).get();
     }
 

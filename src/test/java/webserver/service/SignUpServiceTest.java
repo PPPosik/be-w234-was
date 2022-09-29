@@ -1,6 +1,6 @@
 package webserver.service;
 
-import exception.UserNotValidException;
+import exception.http.UnauthorizedUserException;
 import exception.UserSaveException;
 import model.User;
 import org.junit.jupiter.api.BeforeAll;
@@ -22,7 +22,7 @@ class SignUpServiceTest {
     static final Map<String, String> invalidUser = new HashMap<>();
 
     final UserRepository repository = new UserMemoryRepository();
-    final SignUpService service = new SignUpService(repository);
+    final UserService service = new UserService(repository);
 
     @BeforeAll
     static void beforeAll() {
@@ -45,19 +45,19 @@ class SignUpServiceTest {
     }
 
     @Test
-    void signUpTest() {
-        User savedUser = service.service(userInfo1);
+    void signUpTest() throws UnauthorizedUserException {
+        User savedUser = service.saveUser(userInfo1);
         User generatedUser = generateUser(userInfo1);
 
         assertThat(savedUser).isEqualTo(generatedUser);
     }
 
     @Test
-    void signUpManyUserTest() {
-        User savedUser1 = service.service(userInfo1);
+    void signUpManyUserTest() throws UnauthorizedUserException {
+        User savedUser1 = service.saveUser(userInfo1);
         User generatedUser1 = generateUser(userInfo1);
 
-        User savedUser2 = service.service(userInfo2);
+        User savedUser2 = service.saveUser(userInfo2);
         User generatedUser2 = generateUser(userInfo2);
 
         assertThat(savedUser1).isEqualTo(generatedUser1);
@@ -75,15 +75,15 @@ class SignUpServiceTest {
     }
 
     @Test
-    void signUpDuplicatedUserTest() {
-        service.service(userInfo1);
+    void signUpDuplicatedUserTest() throws UnauthorizedUserException {
+        service.saveUser(userInfo1);
 
-        assertThrows(UserSaveException.class, () -> service.service(userInfo1));
-        assertDoesNotThrow(() -> service.service(userInfo2));
+        assertThrows(UserSaveException.class, () -> service.saveUser(userInfo1));
+        assertDoesNotThrow(() -> service.saveUser(userInfo2));
     }
 
     @Test
     void signUpInvlalidUserTest() {
-        assertThrows(UserNotValidException.class, () -> service.service(invalidUser));
+        assertThrows(UnauthorizedUserException.class, () -> service.saveUser(invalidUser));
     }
 }

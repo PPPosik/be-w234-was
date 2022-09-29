@@ -3,13 +3,14 @@ package webserver.servicehandler;
 import enums.HttpMethod;
 import enums.HttpStatusCode;
 import exception.BoardSaveException;
-import exception.PageNotFoundException;
-import exception.UserNotValidException;
+import exception.http.BadRequestException;
+import exception.http.HttpException;
+import exception.http.UnauthorizedUserException;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import util.Request;
-import util.Response;
+import util.http.Request;
+import util.http.Response;
 import webserver.repository.BoardMySQLRepository;
 import webserver.repository.BoardRepository;
 import webserver.repository.UserMemoryRepository;
@@ -48,7 +49,7 @@ public class BoardServiceHandlerTest {
     }
 
     @Test
-    void saveBoardTest() {
+    void saveBoardTest() throws HttpException {
         Response response = handler.handle(boardSaveRequest);
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.CREATED);
         assertThat(new String(response.getBody())).isEqualTo("게시글 작성에 성공했습니다.");
@@ -58,11 +59,11 @@ public class BoardServiceHandlerTest {
     void saveBoardNotValidUserTest() {
         boardSaveRequest.addCookie("id", "user3");
 
-        assertThrows(UserNotValidException.class, () -> handler.handle(boardSaveRequest));
+        assertThrows(BoardSaveException.class, () -> handler.handle(boardSaveRequest));
     }
 
     @Test
-    void getBoardListTest() {
+    void getBoardListTest() throws HttpException {
         boardSaveRequest.addCookie("id", user1.getUserId());
         boardSaveRequest.addBody("content", "content1");
         handler.handle(boardSaveRequest);
@@ -81,14 +82,14 @@ public class BoardServiceHandlerTest {
         Request request1 = new Request(HttpMethod.GET.getMethod(), "/board", "HTTP/1.1");
         Request request2 = new Request(HttpMethod.POST.getMethod(), "/board/list", "HTTP/1.1");
 
-        assertThrows(PageNotFoundException.class, () -> handler.handle(request1));
-        assertThrows(PageNotFoundException.class, () -> handler.handle(request2));
+        assertThrows(BadRequestException.class, () -> handler.handle(request1));
+        assertThrows(BadRequestException.class, () -> handler.handle(request2));
     }
 
     @Test
     void noCookieTest() {
         Request request = new Request(HttpMethod.POST.getMethod(), "/board", "HTTP/1.1");
 
-        assertThrows(BoardSaveException.class, () -> handler.handle(request));
+        assertThrows(UnauthorizedUserException.class, () -> handler.handle(request));
     }
 }

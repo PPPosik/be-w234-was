@@ -1,30 +1,29 @@
-package util;
+package util.http;
 
 import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import com.google.common.base.Charsets;
-import exception.RequestParsingException;
+import exception.http.BadRequestException;
+import exception.http.HttpException;
+import exception.http.RequestParsingException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.util.Optional;
 
 public class RequestParser {
     private final String COOKIE_HEADER = "cookie";
 
-    private final InputStream in;
+    private final BufferedReader br;
     private Request request;
 
-    public RequestParser(InputStream inputStream) {
-        this.in = inputStream;
+    public RequestParser(BufferedReader br) {
+        this.br = br;
     }
 
-    public Request parse() {
+    public Request parse() throws HttpException {
         if (request == null) {
             try {
-                BufferedReader br = new BufferedReader(new InputStreamReader(in, Charsets.UTF_8));
                 String requestLine = br.readLine();
                 parseRequestLine(requestLine);
                 parseHeaders(br);
@@ -32,7 +31,7 @@ public class RequestParser {
                 int contentLength = Integer.parseInt(Optional.ofNullable(request.getHeaders().get("content-length")).orElse("0"));
 
                 if (contentLength > 0) {
-                    parseBody(br, contentLength);
+                    parseBody(contentLength);
                 }
             } catch (Exception e) {
                 throw new RequestParsingException(e.getMessage());
@@ -42,11 +41,11 @@ public class RequestParser {
         return request;
     }
 
-    private void parseRequestLine(String str) {
+    private void parseRequestLine(String str) throws BadRequestException {
         String[] splits = str.split(" ");
 
         if (splits.length != 3) {
-            throw new RequestParsingException("잘못된 요청입니다.");
+            throw new BadRequestException("잘못된 요청입니다.");
         }
 
         String[] pathWithParam = splits[1].split("\\?", 2);
@@ -94,8 +93,8 @@ public class RequestParser {
         }
     }
 
-    private void parseBody(BufferedReader br, int contentLength) throws IOException {
-        String bodyStr = readBody(br, contentLength);
+    private void parseBody(int contentLength) throws IOException {
+        String bodyStr = readBody(contentLength);
 
         for (String q : bodyStr.split("&")) {
             String[] p = q.split("=");
@@ -105,7 +104,7 @@ public class RequestParser {
         }
     }
 
-    private String readBody(BufferedReader br, int contentLength) throws IOException {
+    private String readBody(int contentLength) throws IOException {
         char[] body = new char[contentLength];
         br.read(body, 0, contentLength);
         return String.copyValueOf(body);
