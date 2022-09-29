@@ -9,9 +9,11 @@ import webserver.servicehandler.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class ServiceHandlerMapper {
-    private static final Map<String, ServiceHandler> handlers;
+    private static final ServiceHandler defaultHandler;
+    private static final Map<Pattern, ServiceHandler> handlers;
 
     private static final UserRepository userRepository;
     private static final BoardRepository boardRepository;
@@ -21,8 +23,6 @@ public class ServiceHandlerMapper {
     private static final BoardService boardService;
 
     static {
-        handlers = new HashMap<>();
-
         userRepository = new UserMemoryRepository();
         boardRepository = new BoardMySQLRepository();
 
@@ -30,23 +30,30 @@ public class ServiceHandlerMapper {
         userSevice = new UserService(userRepository);
         boardService = new BoardService(userRepository, boardRepository);
 
-        // TODO 정규식으로 path 관리
-        handlers.put("/static", new StaticFileServiceHandler(staticFileService));
-        handlers.put("/user/create", new UserServiceHandler(userSevice));
-        handlers.put("/user/login", new UserServiceHandler(userSevice));
-        handlers.put("/user/list", new UserServiceHandler(userSevice));
-        handlers.put("/board", new BoardServiceHandler(boardService));
-        handlers.put("/board/list", new BoardServiceHandler(boardService));
+        defaultHandler = new StaticFileServiceHandler(staticFileService);
+        handlers = new HashMap<>();
+        handlers.put(Pattern.compile("^(/user)[/\\S]*"), new UserServiceHandler(userSevice));
+        handlers.put(Pattern.compile("^(/board)[/\\S]*"), new BoardServiceHandler(boardService));
     }
 
     private ServiceHandlerMapper() {
     }
 
     public static ServiceHandler getHandler(String path) {
-        if (handlers.containsKey(path)) {
-            return handlers.get(path);
-        } else {
-            return handlers.get("/static");
+        if(isFileRequest(path)) {
+            return defaultHandler;
         }
+
+        for (Map.Entry<Pattern, ServiceHandler> entry : handlers.entrySet()) {
+            if (entry.getKey().matcher(path).matches()) {
+                return entry.getValue();
+            }
+        }
+
+        return defaultHandler;
+    }
+
+    private static boolean isFileRequest(String path) {
+        return path.contains(".");
     }
 }
