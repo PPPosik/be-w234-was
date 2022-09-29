@@ -1,5 +1,6 @@
 package webserver.servicehandler;
 
+import constant.LocalConst;
 import enums.HttpMethod;
 import enums.HttpStatusCode;
 import exception.http.BadRequestException;
@@ -17,9 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LoginServiceHandlerTest {
-    private final String LOGIN_SUCCESS_PAGE = "http://localhost:8080/index.html";
-    private final String LOGIN_FAIL_PAGE = "http://localhost:8080/user/login_failed.html";
-
     private final UserRepository repository = new UserMemoryRepository();
     private final UserService service = new UserService(repository);
     private final UserServiceHandler handler = new UserServiceHandler(service);
@@ -58,7 +56,7 @@ class LoginServiceHandlerTest {
     void loginTest() throws HttpException {
         Response response = handler.handle(loginSuccessRequest);
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.FOUND);
-        assertThat(response.getHeaders().get("Location")).isEqualTo(LOGIN_SUCCESS_PAGE);
+        assertThat(response.getHeaders().get("Location")).isEqualTo(LocalConst.HOME_PAGE_URL);
         assertThat(response.getCookie().get("logined")).isEqualTo("true");
         assertThat(response.getCookie().get("id")).isEqualTo("user1");
     }
@@ -67,7 +65,7 @@ class LoginServiceHandlerTest {
     void loginFailTest() throws HttpException {
         Response response = handler.handle(loginFailRequest);
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.FOUND);
-        assertThat(response.getHeaders().get("Location")).isEqualTo(LOGIN_FAIL_PAGE);
+        assertThat(response.getHeaders().get("Location")).isEqualTo(LocalConst.LOGIN_FAIL_PAGE_URL);
         assertThat(response.getCookie().get("logined")).isEqualTo("false");
     }
 }

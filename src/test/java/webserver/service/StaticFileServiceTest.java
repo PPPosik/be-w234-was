@@ -1,5 +1,6 @@
 package webserver.service;
 
+import constant.LocalConst;
 import exception.http.RequestParsingException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ class StaticFileServiceTest {
 
     @Test
     void serviceStaticFileTest() {
-        final String RESOURCE_PATH = "webapp/index.html";
+        final String RESOURCE_PATH = LocalConst.RESOURCE_DIR + LocalConst.HOME_PAGE_PATH;
 
         try {
             byte[] indexFileBody = Files.readAllBytes(new File(RESOURCE_PATH).toPath());

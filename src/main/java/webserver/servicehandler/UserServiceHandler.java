@@ -1,5 +1,6 @@
 package webserver.servicehandler;
 
+import constant.LocalConst;
 import enums.HttpMethod;
 import enums.HttpStatusCode;
 import enums.Mime;
@@ -15,10 +16,6 @@ import webserver.service.UserService;
 import java.util.List;
 
 public class UserServiceHandler implements ServiceHandler {
-    private final String HOME_PAGE = "http://localhost:8080/index.html";
-    private final String LOGIN_PAGE = "http://localhost:8080/user/login.html";
-    private final String LOGIN_FAIL_PAGE = "http://localhost:8080/user/login_failed.html";
-
     private final UserService userService;
 
     public UserServiceHandler(UserService userService) {
@@ -49,9 +46,9 @@ public class UserServiceHandler implements ServiceHandler {
 
         boolean login = userService.login(request.getBody().get("userId"), request.getBody().get("password"));
         if (login) {
-            response.setHeader("Location", HOME_PAGE);
+            response.setHeader("Location", LocalConst.HOME_PAGE_URL);
         } else {
-            response.setHeader("Location", LOGIN_FAIL_PAGE);
+            response.setHeader("Location", LocalConst.LOGIN_FAIL_PAGE_URL);
         }
 
         cookie.put("logined", String.valueOf(login));
@@ -72,7 +69,7 @@ public class UserServiceHandler implements ServiceHandler {
         return response
                 .setHttpStatusCode(HttpStatusCode.FOUND)
                 .setHeader("Content-Type", Mime.getContentType(request.getPath(), request.getHeaders().get("accept")) + ";charset=utf-8")
-                .setHeader("Location", HOME_PAGE);
+                .setHeader("Location", LocalConst.HOME_PAGE_URL);
     }
 
     public Response saveUserPost(Request request) throws HttpException {
@@ -83,7 +80,7 @@ public class UserServiceHandler implements ServiceHandler {
         return response
                 .setHttpStatusCode(HttpStatusCode.FOUND)
                 .setHeader("Content-Type", Mime.getContentType(request.getPath(), request.getHeaders().get("accept")) + ";charset=utf-8")
-                .setHeader("Location", HOME_PAGE);
+                .setHeader("Location", LocalConst.HOME_PAGE_URL);
     }
 
     public Response getUserList(Request request) throws HttpException {
@@ -104,7 +101,7 @@ public class UserServiceHandler implements ServiceHandler {
                     .setHeader("Content-Type", mime.getMime() + ";charset=utf-8");
         } else {
             response.setHttpStatusCode(HttpStatusCode.FOUND)
-                    .setHeader("Location", LOGIN_PAGE);
+                    .setHeader("Location", LocalConst.LOGIN_PAGE_URL);
         }
 
         return response;

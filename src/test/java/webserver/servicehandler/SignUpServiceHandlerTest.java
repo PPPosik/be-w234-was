@@ -1,10 +1,10 @@
 package webserver.servicehandler;
 
+import constant.LocalConst;
 import enums.HttpMethod;
 import enums.HttpStatusCode;
 import exception.http.BadRequestException;
 import exception.http.HttpException;
-import exception.http.RequestParsingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.http.Request;
@@ -19,7 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SignUpServiceHandlerTest {
-    final String REDIRECT_PAGE = "http://localhost:8080/index.html";
     final UserRepository repository = new UserMemoryRepository();
     final UserService service = new UserService(repository);
     final UserServiceHandler handler = new UserServiceHandler(service);
@@ -53,7 +52,7 @@ class SignUpServiceHandlerTest {
         Response response = handler.handle(getRequest);
 
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.FOUND);
-        assertThat(response.getHeaders()).contains(Map.entry("Location", REDIRECT_PAGE));
+        assertThat(response.getHeaders()).contains(Map.entry("Location", LocalConst.HOME_PAGE_URL));
     }
 
     @Test
@@ -61,7 +60,7 @@ class SignUpServiceHandlerTest {
         Response response = handler.handle(postRequest);
 
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.FOUND);
-        assertThat(response.getHeaders()).contains(Map.entry("Location", REDIRECT_PAGE));
+        assertThat(response.getHeaders()).contains(Map.entry("Location", LocalConst.HOME_PAGE_URL));
     }
 
     @Test

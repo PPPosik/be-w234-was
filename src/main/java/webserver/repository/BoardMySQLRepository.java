@@ -1,5 +1,6 @@
 package webserver.repository;
 
+import constant.LocalConst;
 import exception.BoardSaveException;
 import model.Board;
 
@@ -16,7 +17,7 @@ public class BoardMySQLRepository implements BoardRepository {
     private final EntityTransaction tx;
 
     public BoardMySQLRepository() {
-        this.emf = Persistence.createEntityManagerFactory("java_was_2022");
+        this.emf = Persistence.createEntityManagerFactory(LocalConst.PERSISTENCE_NAME);
         this.em = emf.createEntityManager();
         this.tx = em.getTransaction();
     }

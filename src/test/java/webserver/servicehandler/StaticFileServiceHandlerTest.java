@@ -1,5 +1,6 @@
 package webserver.servicehandler;
 
+import constant.LocalConst;
 import enums.HttpMethod;
 import enums.HttpStatusCode;
 import enums.Mime;
@@ -26,7 +27,7 @@ class StaticFileServiceHandlerTest {
 
     @BeforeEach
     void beforeEach() {
-        htmlRequest = new Request(HttpMethod.GET.getMethod(), "/index.html", "HTTP/1.1");
+        htmlRequest = new Request(HttpMethod.GET.getMethod(), LocalConst.HOME_PAGE_PATH, "HTTP/1.1");
         htmlRequest.addHeader("accept", "text/html");
 
         cssRequest = new Request(HttpMethod.GET.getMethod(), "/css/styles.css", "HTTP/1.1");

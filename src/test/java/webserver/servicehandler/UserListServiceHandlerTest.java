@@ -1,5 +1,6 @@
 package webserver.servicehandler;
 
+import constant.LocalConst;
 import enums.HttpMethod;
 import enums.HttpStatusCode;
 import enums.Mime;
@@ -18,8 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserListServiceHandlerTest {
-    private final String LOGIN_PAGE = "http://localhost:8080/user/login.html";
-
     private final UserRepository repository = new UserMemoryRepository();
     private final UserService service = new UserService(repository);
     private final UserServiceHandler handler = new UserServiceHandler(service);
@@ -66,7 +65,7 @@ class UserListServiceHandlerTest {
         Response response = handler.handle(noCookieRequest);
 
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.FOUND);
-        assertThat(response.getHeaders().get("Location")).isEqualTo(LOGIN_PAGE);
+        assertThat(response.getHeaders().get("Location")).isEqualTo(LocalConst.LOGIN_PAGE_URL);
     }
 
     @Test
@@ -74,7 +73,7 @@ class UserListServiceHandlerTest {
         Response response = handler.handle(loginFalseRequest);
 
         assertThat(response.getHttpStatusCode()).isEqualTo(HttpStatusCode.FOUND);
-        assertThat(response.getHeaders().get("Location")).isEqualTo(LOGIN_PAGE);
+        assertThat(response.getHeaders().get("Location")).isEqualTo(LocalConst.LOGIN_PAGE_URL);
     }
 
     @Test

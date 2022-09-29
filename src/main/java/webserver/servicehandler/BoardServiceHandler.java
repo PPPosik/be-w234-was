@@ -8,7 +8,6 @@ import exception.http.HttpException;
 import exception.http.UnauthorizedUserException;
 import model.Board;
 import util.AuthValidator;
-import util.http.Cookie;
 import util.http.Request;
 import util.http.Response;
 import webserver.service.BoardService;
