@@ -10,8 +10,6 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.transaction.Transactional;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
 @Transactional
 class BoardTest {
     EntityManagerFactory emf;
@@ -36,6 +34,6 @@ class BoardTest {
     @Test
     void persistTest() {
         Board board = new Board("user1", "user1_content");
-        assertDoesNotThrow(() -> em.persist(board));
+        em.persist(board);
     }
 }

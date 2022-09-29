@@ -1,15 +1,10 @@
-package util.http;
+package util;
 
-import com.google.common.base.Charsets;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import util.http.Request;
-import util.http.RequestParser;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,11 +24,8 @@ class RequestParserTest {
                 "Connection: keep-alive\n" +
                 "Accept: */*").getBytes());
 
-        BufferedReader br1 = new BufferedReader(new InputStreamReader(in1, Charsets.UTF_8));
-        BufferedReader br2 = new BufferedReader(new InputStreamReader(in2, Charsets.UTF_8));
-
         // index.html 호출
-        Request request1 = new RequestParser(br1).parse();
+        Request request1 = new RequestParser(in1).parse();
 
         assertThat(request1.getMethod().getMethod()).isEqualTo("GET");
         assertThat(request1.getPath()).isEqualTo("/index.html");
@@ -50,7 +42,7 @@ class RequestParserTest {
 
         Assertions.assertThrows(Exception.class, () -> {
             // 유효하지 않은 호출
-            Request request2 = new RequestParser(br2).parse();
+            Request request2 = new RequestParser(in2).parse();
         });
     }
 }

@@ -2,13 +2,8 @@ package webserver.servicehandler;
 
 import enums.HttpStatusCode;
 import enums.Mime;
-import exception.http.HttpException;
-import exception.http.PageNotFoundException;
-import util.http.Request;
-import util.http.Response;
+import util.*;
 import webserver.service.StaticFileService;
-
-import java.io.File;
 
 public class StaticFileServiceHandler implements ServiceHandler {
     private final StaticFileService staticFileService;
@@ -18,20 +13,22 @@ public class StaticFileServiceHandler implements ServiceHandler {
     }
 
     @Override
-    public Response handle(Request request) throws HttpException{
-        File file = new File(staticFileService.getResourcePath(request.getPath()));
-
+    public Response handle(Request request) {
+        Response response = new Response();
         byte[] body;
-        if (file.exists()) {
-            body = staticFileService.serviceStaticFile(file);
-        } else {
-            throw new PageNotFoundException("파일을 찾을 수 없습니다.");
+
+        try {
+            body = staticFileService.serviceStaticFile(request.getPath());
+            response.setHttpStatusCode(HttpStatusCode.OK);
+        } catch (Exception e) {
+            body = staticFileService.serviceDefault();
+            response.setHttpStatusCode(HttpStatusCode.NOT_FOUND);
+            System.out.println("e = " + e);
         }
 
-        return new Response()
-                .setHttpStatusCode(HttpStatusCode.OK)
+        return response
                 .setHeader("Content-Length", String.valueOf(body.length))
-                .setContentType(request)
+                .setHeader("Content-Type", Mime.getContentType(request.getPath(), request.getHeaders().get("accept")) + ";charset=utf-8")
                 .setBody(body);
     }
 }

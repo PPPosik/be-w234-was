@@ -1,8 +1,6 @@
-package util;
+package model;
 
-import model.User;
 import org.junit.jupiter.api.Test;
-import util.UserValidator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +17,10 @@ class UserValidatorTest {
     private final List<String> validNames = new ArrayList<>(List.of("user1"));
     private final List<String> validEmails = new ArrayList<>(List.of("user1@abc.com"));
 
-    private final List<String> invalidUserIds = new ArrayList<>(List.of("", "아이디"));
-    private final List<String> invalidPasswords = new ArrayList<>(List.of("", "비밀번호"));
-    private final List<String> invalidNames = new ArrayList<>(List.of("", "이름"));
-    private final List<String> invalidEmails = new ArrayList<>(List.of("", "user2email"));
+    private final List<String> invalidUserIds = new ArrayList<>(List.of("아이디"));
+    private final List<String> invalidPasswords = new ArrayList<>(List.of("비밀번호"));
+    private final List<String> invalidNames = new ArrayList<>(List.of("이름"));
+    private final List<String> invalidEmails = new ArrayList<>(List.of("user2email"));
 
     @Test
     void validUserIdTest() {
@@ -90,13 +88,5 @@ class UserValidatorTest {
     void invalidUserTest() {
         assertThat(UserValidator.isValidUser(invalidUser)).isFalse();
         assertThat(UserValidator.isNotValidUser(invalidUser)).isTrue();
-    }
-
-    @Test
-    void nullTest() {
-        assertThat(UserValidator.isValidUserId(null)).isFalse();
-        assertThat(UserValidator.isValidPassword(null)).isFalse();
-        assertThat(UserValidator.isValidName(null)).isFalse();
-        assertThat(UserValidator.isValidEmail(null)).isFalse();
     }
 }
